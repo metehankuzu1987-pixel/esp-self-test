@@ -419,6 +419,32 @@ function shareImage(){
 renderNav();
 const first = store.get('first-visit', true);
 if(first){ store.set('first-visit', false); go('about'); } else { go('dashboard'); }
-</script>
+// ======= Global Expose for inline onclicks =======
+// (Some browsers/pages need functions on window for inline handlers)
+Object.assign(window, {
+  toggleLang, go,
+  exportJSON, exportCSV, importJSON, shareImage,
+  applyTheme, setSeed,
+  zenerGuess, zenerFinish, zenerReset,
+  ganzChoose, ganzSave, ganzReset,
+  dreamAdd, dreamClearForm, dreamMatch, dreamDel,
+  premAdd, premSet, premDel,
+  rvChoose, rvSave, rvReset
+});
+
+// ======= Boot with error guard =======
+window.addEventListener('error', e=>{
+  const d=document.createElement('div');
+  d.style.cssText='position:fixed;left:12px;bottom:12px;z-index:999999;background:rgba(255,0,0,.12);border:1px solid rgba(255,0,0,.4);padding:10px 12px;border-radius:10px;color:#ffdada;font:12px sans-serif;max-width:92vw';
+  d.textContent='JS Hatası: '+e.message;
+  document.body.appendChild(d);
+});
+try{
+  renderNav();
+  go('dashboard');
+}catch(e){
+  console.error('Boot error', e);
+}
+<\/script>
 </body>
 </html>
