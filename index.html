@@ -4,12 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tabirly | ESP Self‑Test (Eğlence Amaçlı)</title>
-  <meta name="description" content="Eğlence amaçlı ESP mini testleri: Zener, Ganzfeld, Rüya ve Önsezi günlükleri. Sonuçlar yerelde sakla, CSV/JSON indir, kendi hızında dene." />
+  <meta name="description" content="Zener, Ganzfeld, Rüya, Önsezi ve Remote Viewing (Uzaktan Görme). RNG seed, grafikler, rozetler, profil ve paylaşılabilir rapor. Tek dosya, GitHub Pages uyumlu." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2306b6d4'/%3E%3Cpath d='M14 32c8-12 28-12 36 0-8 12-28 12-36 0z' fill='%23fff'/%3E%3Ccircle cx='32' cy='32' r='6' fill='%237c3aed'/%3E%3C/svg%3E" />
   <style>
     :root{
-      /* Tabirly marka renklerini buradan güncelleyebilirsin */
-      --brand:#7c3aed; /* mor-acc */
-      --brand2:#06b6d4; /* camgöbeği */
+      --brand:#7c3aed; --brand2:#06b6d4;
       --bg:#0b0e13; --card:#11161f; --muted:#8aa0b3; --text:#e6eef5; --accent:var(--brand2); --accent2:var(--brand); --warn:#ffd166; --good:#7eed9a; --bad:#ff7a7a;
       --radius:16px; --pad:14px; --gap:12px; --shadow:0 10px 25px rgba(0,0,0,.35);
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -19,12 +18,12 @@
     html,body{height:100%}
     body{margin:0; font-family:var(--sans); background:linear-gradient(180deg,#0b0e13,#0a0d12); color:var(--text);}
     a{color:var(--accent)} a:hover{color:#9ae6ff}
-    header{max-width:1100px;margin:24px auto 12px; padding:0 16px}
+    header{max-width:1200px;margin:24px auto 12px; padding:0 16px}
     .title{font-size:28px; font-weight:800; letter-spacing:.2px}
     .subtitle{color:var(--muted); margin-top:6px}
 
-    .shell{max-width:1100px; margin:0 auto 60px; padding:0 16px; display:grid; grid-template-columns:280px 1fr; gap:16px}
-    @media (max-width:900px){.shell{grid-template-columns:1fr}}
+    .shell{max-width:1200px; margin:0 auto 70px; padding:0 16px; display:grid; grid-template-columns:300px 1fr; gap:16px}
+    @media (max-width:980px){.shell{grid-template-columns:1fr}}
 
     .nav{position:sticky; top:12px; align-self:flex-start; background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.06); border-radius:var(--radius); padding:10px; box-shadow:var(--shadow)}
     .nav h3{margin:6px 8px 8px; font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:.8px}
@@ -47,13 +46,12 @@
 
     .pill{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); font-size:12px}
 
-    .bar{height:10px; background:#0e1520; border:1px solid rgba(255,255,255,.06); border-radius:999px; overflow:hidden}
-    .bar > span{display:block; height:100%}
-    .bar .ok{background:linear-gradient(90deg, var(--good), #a8f7bc)}
-    .bar .bad{background:linear-gradient(90deg, var(--bad), #ff9c9c)}
-    .kv{display:grid; grid-template-columns:140px 1fr; gap:8px; align-items:center}
     .mono{font-family:var(--mono)}
+    .section-title{font-size:20px; font-weight:800; margin:4px 0 10px}
+    .sub{font-size:14px; color:var(--muted)}
+    .list{list-style:disc; padding-left:20px}
 
+    /* Zener */
     .zener-grid{display:grid; grid-template-columns:repeat(5, minmax(80px, 1fr)); gap:10px}
     .zbtn{aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; border-radius:12px; background:#0d131c; border:1px solid rgba(255,255,255,.08); cursor:pointer; font-size:30px}
     .zbtn:hover{background:#0f1825}
@@ -66,20 +64,19 @@
     .danger{color:#ffb4b4}
     .good{color:#9bf2b0}
 
-    .section-title{font-size:20px; font-weight:800; margin:4px 0 10px}
-    .sub{font-size:14px; color:var(--muted)}
-
-    .list{list-style:disc; padding-left:20px}
-    .flex-center{display:flex; align-items:center; gap:10px}
-
     .settings-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px}
     @media (max-width:700px){.settings-grid{grid-template-columns:1fr}}
+
+    /* Remote Viewing */
+    .rv-grid{display:grid; grid-template-columns:repeat(4, minmax(120px, 1fr)); gap:10px}
+    .rv-card{background:var(--card); border:1px dashed rgba(255,255,255,.15); border-radius:12px; padding:10px; min-height:120px; display:flex; align-items:center; justify-content:center}
+    .rv-thumb{background:#0d131c; border:1px solid rgba(255,255,255,.08); border-radius:10px; padding:10px}
   </style>
 </head>
 <body>
   <header>
-    <div class="title">Tabirly • ESP Self‑Test <span class="pill" title="Eğlence amaçlıdır, tıbbi/nihai hüküm vermez">Eğlence Amaçlı</span></div>
-    <div class="subtitle" id="subtitle">Zener • Mini‑Ganzfeld • Rüya • Önsezi. Sonuçlar <strong>yalnızca bu cihazda</strong> saklanır (localStorage). JSON/CSV indirebilirsin.</div>
+    <div class="title">Tabirly • ESP Self‑Test <span class="pill">Eğlence Amaçlı</span></div>
+    <div class="subtitle" id="subtitle">Zener • Mini‑Ganzfeld • Rüya • Önsezi • <b>Remote Viewing</b>. Tüm veriler cihazında saklanır; JSON/CSV indirilebilir.</div>
   </header>
 
   <main class="shell">
@@ -94,6 +91,7 @@
       <div class="row" style="padding:6px">
         <button class="btn secondary" onclick="exportJSON()">JSON İndir</button>
         <button class="btn secondary" onclick="exportCSV()">CSV İndir</button>
+        <button class="btn secondary" onclick="shareImage()">Rapor PNG</button>
         <label class="btn ghost" style="cursor:pointer">
           JSON Yükle<input type="file" accept="application/json" hidden onchange="importJSON(event)" />
         </label>
@@ -111,30 +109,32 @@ const I18N = {
   tr: {
     modules: 'Modüller', data: 'Veri', privacy: 'Gizlilik: Veriler yalnızca tarayıcında saklanır. Sunucuya gönderilmez.',
     clear_confirm: 'Tüm yerel veriler silinsin mi?',
-    dashboard: 'Ana Panel', zener: 'Zener Kart Testi', ganzfeld: 'Mini‑Ganzfeld', dreams: 'Rüya Testi', premonitions: 'Önsezi Günlüğü', about: 'Hakkında / Uyarı', settings: 'Ayarlar',
+    dashboard: 'Ana Panel', zener: 'Zener Kart Testi', ganzfeld: 'Mini‑Ganzfeld', dreams: 'Rüya Testi', premonitions: 'Önsezi Günlüğü', remote: 'Remote Viewing', about: 'Hakkında / Uyarı', settings: 'Ayarlar',
     rng_seed: 'RNG Tohumu (Seed)', rng_note: 'Şeffaflık için tüm rastgelelik bu tohumla üretilir.',
     randomize: 'Rastgeleleştir', set_seed: 'Tohum Belirle', theme: 'Tema', brand_primary: 'Birincil Renk', brand_secondary: 'İkincil Renk',
     save: 'Kaydet',
     onboarding: 'Mini Rehber',
-    step1: 'Zener ile 5×25 tur yap. Tek gecelik skor yerine seri gör.',
-    step2: 'Ganzfeld’de önce izlenimleri yaz, sonra seçim yap.',
-    step3: 'Rüyadan uyanınca 30 sn içinde not düş. Akşam eşleşmeyi işaretle.',
-    step4: 'Önsezi notlarını tek cümle yaz; sonra oldu/olmadı işaretle.',
-    seed_display: 'Aktif Seed'
+    step1: 'Zener ile 5×25 tur yap. Seri daha anlamlıdır.',
+    step2: 'Ganzfeld’de izlenimleri önce yaz, sonra seçim yap.',
+    step3: 'Rüyayı uyanınca 30 sn içinde not et; akşam eşleşmeyi işaretle.',
+    step4: 'Önsezi notlarını tek cümleyle yaz; oldu/olmadı de.',
+    seed_display: 'Aktif Seed',
+    profile: 'Profil', name: 'Ad/Rumuz', badges: 'Rozetler'
   },
   en: {
     modules: 'Modules', data: 'Data', privacy: 'Privacy: Data stays in your browser. Nothing is uploaded.',
     clear_confirm: 'Delete all local data?',
-    dashboard: 'Dashboard', zener: 'Zener Card Test', ganzfeld: 'Mini‑Ganzfeld', dreams: 'Dream Test', premonitions: 'Premonition Log', about: 'About / Notice', settings: 'Settings',
+    dashboard: 'Dashboard', zener: 'Zener Card Test', ganzfeld: 'Mini‑Ganzfeld', dreams: 'Dream Test', premonitions: 'Premonition Log', remote: 'Remote Viewing', about: 'About / Notice', settings: 'Settings',
     rng_seed: 'RNG Seed', rng_note: 'All randomness comes from this seed for transparency.',
     randomize: 'Randomize', set_seed: 'Set Seed', theme: 'Theme', brand_primary: 'Primary Color', brand_secondary: 'Secondary Color',
     save: 'Save',
     onboarding: 'Quick Guide',
-    step1: 'Run 5×25 Zener trials. Prefer series over one‑night scores.',
-    step2: 'In Ganzfeld, record impressions first, choose later.',
-    step3: 'Write dream notes within 30s of waking. Mark matches in the evening.',
+    step1: 'Run 5×25 Zener trials. Series > one‑night spikes.',
+    step2: 'In Ganzfeld, record impressions first; choose later.',
+    step3: 'Write dream notes within 30s of waking; mark match later.',
     step4: 'Write premonitions in one line; later mark happened/didn’t.',
-    seed_display: 'Active Seed'
+    seed_display: 'Active Seed',
+    profile: 'Profile', name: 'Name/Nickname', badges: 'Badges'
   }
 };
 let LANG = localStorage.getItem('tbx-esp-lang') || 'tr';
@@ -159,13 +159,14 @@ function spick(arr){ return arr[Math.floor(srand()*arr.length)] }
 
 // ========== Router / Views ==========
 let currentView = null;
-const views = { dashboard, zener, ganzfeld, dreams, premonitions, about, settings };
+const views = { dashboard, zener, ganzfeld, dreams, premonitions, remote, about, settings };
 let navItems = [];
 function buildNavItems(){
   navItems = [
     ['dashboard', t('dashboard')],
     ['zener', t('zener')],
     ['ganzfeld', t('ganzfeld')],
+    ['remote', t('remote')],
     ['dreams', t('dreams')],
     ['premonitions', t('premonitions')],
     ['about', t('about')],
@@ -197,9 +198,27 @@ function uid(){ return Math.random().toString(36).slice(2) }
 function download(filename, text){ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([text],{type:'text/plain'})); a.download=filename; a.click(); URL.revokeObjectURL(a.href) }
 function percent(x){ return (x*100).toFixed(1)+'%' }
 
-// Quick charts (inline SVG sparkbars)
+// Simple SVG sparkbars
 function sparkbar(values){ const w=160,h=32,max=Math.max(1,...values); const step=w/values.length; let rects=''; values.forEach((v,i)=>{ const bh = Math.max(1, h*(v/max)); const x=i*step+2, y=h-bh; rects += `<rect x="${x}" y="${y}" width="${Math.max(1,step-4)}" height="${bh}" rx="2" fill="url(#g)"/>` }); return `
 <svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="var(--accent)"/><stop offset="100%" stop-color="var(--accent2)"/></linearGradient></defs>${rects}</svg>` }
+
+// ========== Profile & Badges ==========
+function getProfile(){ return store.get('profile', { name:'', badges:[] }) }
+function setProfile(p){ store.set('profile', p) }
+function awardBadges(){
+  const p = getProfile();
+  const z = store.get('zener-sessions', []).length;
+  const g = store.get('ganzfeld-sessions', []).length;
+  const d = store.get('dream-entries', []).length;
+  const rv = store.get('rv-sessions', []).length;
+  function add(b){ if(!p.badges.includes(b)) p.badges.push(b) }
+  if(z>=5) add('Zener Novice');
+  if(z>=25) add('Zener Pro');
+  if(g>=5) add('Ganz Explorer');
+  if(d>=7) add('Dreamer');
+  if(rv>=5) add('Remote Scout');
+  setProfile(p);
+}
 
 // ========== Dashboard ==========
 function dashboard(){
@@ -207,25 +226,31 @@ function dashboard(){
   const g = store.get('ganzfeld-sessions', []);
   const d = store.get('dream-entries', []);
   const p = store.get('premonitions', []);
+  const rv = store.get('rv-sessions', []);
+  const prof = getProfile();
   const zHits = z.reduce((a,s)=>a+s.hits,0), zN = z.reduce((a,s)=>a+s.n,0);
   const gHits = g.reduce((a,s)=>a+s.correct,0), gN = g.reduce((a,s)=>a+s.n,0);
   const dMatch = d.filter(x=>x.matched===true).length;
   const pHit = p.filter(x=>x.confirmed===true).length;
+  const rvHits = rv.filter(x=>x.correct===1).length;
   const zSeries = z.slice(-12).map(s=> Number((s.hits/s.n*100).toFixed(1)) );
   const gSeries = g.slice(-12).map(s=> s.correct?100:0 );
   const seed = store.get('rng-seed');
   return `
   <div class="row">
-    <div class="card" style="flex:1; min-width:260px">
+    <div class="card" style="flex:1; min-width:280px">
       <div class="section-title">${t('dashboard')}</div>
+      <div class="kv"><div>${t('profile')}</div><div><input id="pfname" type="text" placeholder="${t('name')}" value="${prof.name}" onblur="saveName(this.value)" /></div></div>
       <div class="kv"><div>Zener toplam</div><div><b>${zHits}/${zN}</b> <span class="muted">(${zN?percent(zHits/zN):'–'})</span></div></div>
       <div class="kv"><div>Ganzfeld toplam</div><div><b>${gHits}/${gN}</b> <span class="muted">(${gN?percent(gHits/gN):'–'})</span></div></div>
+      <div class="kv"><div>Remote Viewing</div><div><b>${rvHits}/${rv.length}</b></div></div>
       <div class="kv"><div>Rüya eşleşmesi</div><div><b>${dMatch}/${d.length}</b></div></div>
       <div class="kv"><div>Önsezi isabeti</div><div><b>${pHit}/${p.length}</b></div></div>
       <div class="kv"><div>${t('seed_display')}</div><div class="mono">${seed}</div></div>
+      <div class="kv"><div>${t('badges')}</div><div>${getProfile().badges.map(b=>`<span class='chip'>${b}</span>`).join(' ')||'<span class="muted">—</span>'}</div></div>
       <div class="foot">${t('privacy')}</div>
     </div>
-    <div class="card" style="flex:1; min-width:260px">
+    <div class="card" style="flex:1; min-width:280px">
       <div class="section-title">Mini Grafikler</div>
       <div class="kv"><div>Zener %</div><div>${zSeries.length? sparkbar(zSeries): '<span class="muted">—</span>'}</div></div>
       <div class="kv"><div>Ganzfeld</div><div>${gSeries.length? sparkbar(gSeries): '<span class="muted">—</span>'}</div></div>
@@ -236,9 +261,14 @@ function dashboard(){
         <li>${t('step3')}</li>
         <li>${t('step4')}</li>
       </ul>
+      <div class="row" style="margin-top:10px">
+        <button class="btn secondary" onclick="shareImage()">Rapor PNG</button>
+        <button class="btn" onclick="go('remote')">Remote Viewing</button>
+      </div>
     </div>
   </div>`
 }
+function saveName(v){ const p=getProfile(); p.name=v.trim(); setProfile(p); alert('Profil güncellendi'); }
 
 // ========== Zener ==========
 const ZENER = [
@@ -248,380 +278,142 @@ const ZENER = [
   {k:'square', label:'Kare ◼', icon:'◼'},
   {k:'waves', label:'Dalga 🌊', icon:'🌊'}
 ];
-
 function zener(){
   const state = store.get('zener-state', null);
-  if(!state){ // init
-    const deck = [...Array(25)].map((_,i)=> Math.floor(i/5)); // 0..4 each 5 times
-    // shuffle deck with seeded RNG
-    for(let i=deck.length-1; i>0; i--){ const j=Math.floor(srand()*(i+1)); [deck[i],deck[j]]=[deck[j],deck[i]] }
-    store.set('zener-state', { id: uid(), ts: Date.now(), step:0, deck, guesses:[], hits:0 });
-  }
+  if(!state){ const deck = [...Array(25)].map((_,i)=> Math.floor(i/5)); for(let i=deck.length-1; i>0; i--){ const j=Math.floor(srand()*(i+1)); [deck[i],deck[j]]=[deck[j],deck[i]] } store.set('zener-state', { id: uid(), ts: Date.now(), step:0, deck, guesses:[], hits:0 }); }
   const s = store.get('zener-state');
-  const done = s.step>=s.deck.length;
-  const n = s.deck.length;
-  const content = `
+  const done = s.step>=s.deck.length; const n = s.deck.length;
+  return `
   <div class="section-title">Zener Kart Testi <span class="sub">(25 tur)</span></div>
   <div class="inline-stat">
     <span class="chip">Tur: <b>${Math.min(s.step+1,n)}</b> / ${n}</span>
     <span class="chip">İsabet: <b>${s.hits}</b></span>
     <span class="chip">Skor: <b>${percent(s.hits/(s.step||1))}</b></span>
   </div>
-  <div style="margin-top:12px" class="muted">Gönderici kartı görüyor (simülasyonda RNG seed=<span class="mono">${store.get('rng-seed')}</span>). Sen sadece <b>tahmin</b> yap.</div>
+  <div style="margin-top:12px" class="muted">RNG seed=<span class="mono">${store.get('rng-seed')}</span>. Tahminini seç.</div>
   ${done? `<div class="good" style="margin:10px 0">Seans bitti. Aşağıdan kaydet veya yeni seans başlat.</div>`: ''}
-  <div class="zener-grid" style="margin-top:12px">
-    ${ZENER.map((z,i)=> `<button class="zbtn" onclick="zenerGuess(${i})" ${done?'disabled':''} title="${z.label}"><span class="zcard">${z.icon}</span></button>`).join('')}
-  </div>
-  <div class="row" style="margin-top:14px">
-    <button class="btn secondary" onclick="zenerReset(true)">Yeni Seans</button>
-    <button class="btn" onclick="zenerFinish()">Seansı Kaydet</button>
-  </div>
-  ${renderZenerHistory()}
-  `;
-  return content;
+  <div class="zener-grid" style="margin-top:12px">${ZENER.map((z,i)=> `<button class="zbtn" onclick="zenerGuess(${i})" ${done?'disabled':''} title="${z.label}"><span class="zcard">${z.icon}</span></button>`).join('')}</div>
+  <div class="row" style="margin-top:14px"><button class="btn secondary" onclick="zenerReset(true)">Yeni Seans</button><button class="btn" onclick="zenerFinish()">Seansı Kaydet</button></div>
+  ${renderZenerHistory()}`
 }
-
-function zenerGuess(i){
-  const s = store.get('zener-state');
-  if(s.step>=s.deck.length) return;
-  const target = s.deck[s.step];
-  s.guesses.push(i);
-  if(i===target) s.hits++;
-  s.step++;
-  store.set('zener-state', s);
-  go('zener');
-}
-
-function zenerFinish(){
-  const s = store.get('zener-state');
-  if(!s) return;
-  const n = s.deck.length;
-  const session = { id:s.id, ts:s.ts, n, hits:s.hits, guesses:s.guesses, deck:s.deck };
-  const arr = store.get('zener-sessions', []);
-  arr.push(session); store.set('zener-sessions', arr);
-  store.del('zener-state');
-  alert(`Kaydedildi. İsabet: ${s.hits}/${n} ( ${(s.hits/n*100).toFixed(1)}% )
-Not: Bu skor sadece eğlence amaçlıdır.`);
-  go('zener');
-}
-
+function zenerGuess(i){ const s = store.get('zener-state'); if(s.step>=s.deck.length) return; const target = s.deck[s.step]; s.guesses.push(i); if(i===target) s.hits++; s.step++; store.set('zener-state', s); go('zener'); }
+function zenerFinish(){ const s = store.get('zener-state'); if(!s) return; const n = s.deck.length; const arr = store.get('zener-sessions', []); arr.push({ id:s.id, ts:s.ts, n, hits:s.hits, guesses:s.guesses, deck:s.deck }); store.set('zener-sessions', arr); store.del('zener-state'); awardBadges(); alert(`Kaydedildi. İsabet: ${s.hits}/${n} ( ${(s.hits/n*100).toFixed(1)}% )`); go('zener'); }
 function zenerReset(confirmAsk){ if(confirmAsk && !confirm('Devam eden seansı sıfırlamak istiyor musun?')) return; store.del('zener-state'); go('zener') }
-
-function renderZenerHistory(){
-  const arr = store.get('zener-sessions', []);
-  if(arr.length===0) return `<div class="card" style="margin-top:16px"><div class="muted">Henüz kayıt yok.</div></div>`;
-  function binomTailGE(n,k,p){ function logFact(m){ let s=0; for(let i=2;i<=m;i++) s+=Math.log(i); return s } function logChoose(n,r){ return logFact(n)-logFact(r)-logFact(n-r) } function logBinom(n,r,p){ return logChoose(n,r)+ r*Math.log(p) + (n-r)*Math.log(1-p) } let sum=0; for(let r=k;r<=n;r++){ sum+= Math.exp( logBinom(n,r,p) ) } return sum }
-  const rows = arr.slice().reverse().map(s=>{
-    const p = (s.hits/s.n);
-    const tail = binomTailGE(s.n, s.hits, 0.2);
-    return `<tr>
-      <td class="mono">${fmtDate(s.ts)}</td>
-      <td>${s.hits}/${s.n}</td>
-      <td>${(p*100).toFixed(1)}%</td>
-      <td title="P(X≥k) for p=0.20" class="mono">${tail.toExponential(2)}</td>
-    </tr>`
-  }).join('');
-  const series = arr.map(s=> Number((s.hits/s.n*100).toFixed(1)) );
-  return `
-  <div class="card" style="margin-top:16px">
-    <div class="section-title">Geçmiş Seanslar</div>
-    <div class="muted" style="margin-bottom:8px">Binom sağ‑kuyruk (p=0.20) gösterge amaçlıdır.</div>
-    <div style="margin:6px 0">${series.length? sparkbar(series.slice(-16)) : ''}</div>
-    <div style="overflow:auto">
-    <table style="width:100%; border-collapse:collapse">
-      <thead><tr>
-        <th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Tarih</th>
-        <th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">İsabet</th>
-        <th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Yüzde</th>
-        <th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Binom Kuyruk</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table></div>
-  </div>`
-}
+function renderZenerHistory(){ const arr = store.get('zener-sessions', []); if(arr.length===0) return `<div class="card" style="margin-top:16px"><div class="muted">Henüz kayıt yok.</div></div>`; function binomTailGE(n,k,p){ function logFact(m){ let s=0; for(let i=2;i<=m;i++) s+=Math.log(i); return s } function logChoose(n,r){ return logFact(n)-logFact(r)-logFact(n-r) } function logBinom(n,r,p){ return logChoose(n,r)+ r*Math.log(p) + (n-r)*Math.log(1-p) } let sum=0; for(let r=k;r<=n;r++){ sum+= Math.exp( logBinom(n,r,p) ) } return sum } const rows = arr.slice().reverse().map(s=>{ const p = (s.hits/s.n); const tail = binomTailGE(s.n, s.hits, 0.2); return `<tr><td class="mono">${fmtDate(s.ts)}</td><td>${s.hits}/${s.n}</td><td>${(p*100).toFixed(1)}%</td><td title="P(X≥k) for p=0.20" class="mono">${tail.toExponential(2)}</td></tr>` }).join(''); const series = arr.map(s=> Number((s.hits/s.n*100).toFixed(1)) ); return `<div class="card" style="margin-top:16px"><div class="section-title">Geçmiş Seanslar</div><div style="margin:6px 0">${series.length? sparkbar(series.slice(-16)) : ''}</div><div style="overflow:auto"><table style="width:100%; border-collapse:collapse"><thead><tr><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Tarih</th><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">İsabet</th><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Yüzde</th><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Binom Kuyruk</th></tr></thead><tbody>${rows}</tbody></table></div></div>` }
 
 // ========== Mini-Ganzfeld ==========
 const GF_POOL = [ 'Kırmızı kapı', 'Fok balığı', 'Savaş uçağı', 'Ayçiçeği tarlası', 'Palyaço balığı', 'Karlı dağ', 'Gitar', 'Şimşek' ];
-
-function ganzfeld(){
-  const s = store.get('ganz-state', null) || { id:uid(), phase:'setup', poolSize:4, impressions:'', ts:Date.now() };
-  function save(){ store.set('ganz-state', s) }
-
-  function ui(){
-    if(s.phase==='setup'){
-      const pool = [];
-      const src = GF_POOL.slice();
-      while(pool.length < s.poolSize){ const x = spick(src); if(!pool.includes(x)) pool.push(x) }
-      s.pool = pool; s.target = Math.floor(srand()*pool.length); s.phase='impress'; save();
-    }
-    if(s.phase==='impress'){
-      return `
-      <div class="section-title">Mini‑Ganzfeld</div>
-      <div class="sub">Aşağıdaki 4 hedeften biri gizlice seçildi. 2–5 dakika aklına gelenleri yaz, sonra seçim yap.</div>
-      <div class="card" style="margin-top:10px"><b>Hedef Havuzu (4)</b><ul class="list">${s.pool.map(x=>`<li>${x}</li>`).join('')}</ul></div>
-      <label class="muted" style="display:block; margin:10px 0 6px">İzlenimler (serbest akış notları)</label>
-      <textarea oninput="(function(v){ const s=store.get('ganz-state'); s.impressions=v; store.set('ganz-state',s) })(this.value)">${s.impressions||''}</textarea>
-      <div class="row" style="margin-top:10px">
-        <button class="btn" onclick="(function(){ const s=store.get('ganz-state'); s.phase='choose'; store.set('ganz-state',s); go('ganzfeld') })()">Seçime Geç</button>
-        <button class="btn secondary" onclick="ganzReset(true)">Oturumu Sıfırla</button>
-      </div>`
-    }
-    if(s.phase==='choose'){
-      return `
-      <div class="section-title">Seçim</div>
-      <div class="sub">Hangi hedefe en çok benziyor?</div>
-      <div class="row" style="margin-top:10px">${s.pool.map((x,i)=>`<button class="btn secondary" onclick="ganzChoose(${i})">${i+1}. ${x}</button>`).join('')}</div>
-      <div class="foot">RNG seed: <span class="mono">${store.get('rng-seed')}</span></div>`
-    }
-    if(s.phase==='done'){
-      const ok = s.choice===s.target;
-      const entry = `<div class="card" style="margin-top:10px">
-        <div class="inline-stat">
-          <span class="chip">Seçimin: <b>${s.pool[s.choice]}</b></span>
-          <span class="chip">Hedef: <b>${s.pool[s.target]}</b></span>
-          <span class="chip">Durum: <b>${ok? 'Doğru':'Yanlış'}</b></span>
-        </div>
-        <div style="margin-top:8px"><b>İzlenimler:</b><div class="muted">${(s.impressions||'—').replace(/[<>]/g,'')}</div></div>
-      </div>`;
-      return `
-      <div class="section-title">Sonuç</div>
-      ${entry}
-      <div class="row" style="margin-top:12px">
-        <button class="btn" onclick="ganzSave()">Kaydet</button>
-        <button class="btn secondary" onclick="ganzReset()">Yeni Oturum</button>
-      </div>
-      ${renderGanzHistory()}`
-    }
-  }
-  return ui();
-}
-
+function ganzfeld(){ const s = store.get('ganz-state', null) || { id:uid(), phase:'setup', poolSize:4, impressions:'', ts:Date.now() }; function save(){ store.set('ganz-state', s) } function ui(){ if(s.phase==='setup'){ const pool = []; const src = GF_POOL.slice(); while(pool.length < s.poolSize){ const x = spick(src); if(!pool.includes(x)) pool.push(x) } s.pool = pool; s.target = Math.floor(srand()*pool.length); s.phase='impress'; save(); } if(s.phase==='impress'){ return `<div class="section-title">Mini‑Ganzfeld</div><div class="sub">Aşağıdaki 4 hedeften biri gizlice seçildi. 2–5 dakika aklına gelenleri yaz, sonra seçim yap.</div><div class="card" style="margin-top:10px"><b>Hedef Havuzu (4)</b><ul class="list">${s.pool.map(x=>`<li>${x}</li>`).join('')}</ul></div><label class="muted" style="display:block; margin:10px 0 6px">İzlenimler</label><textarea oninput="(function(v){ const s=store.get('ganz-state'); s.impressions=v; store.set('ganz-state',s) })(this.value)">${s.impressions||''}</textarea><div class="row" style="margin-top:10px"><button class="btn" onclick="(function(){ const s=store.get('ganz-state'); s.phase='choose'; store.set('ganz-state',s); go('ganzfeld') })()">Seçime Geç</button><button class="btn secondary" onclick="ganzReset(true)">Oturumu Sıfırla</button></div>` } if(s.phase==='choose'){ return `<div class="section-title">Seçim</div><div class="sub">Hangi hedefe en çok benziyor?</div><div class="row" style="margin-top:10px">${s.pool.map((x,i)=>`<button class="btn secondary" onclick="ganzChoose(${i})">${i+1}. ${x}</button>`).join('')}</div><div class="foot">RNG seed: <span class="mono">${store.get('rng-seed')}</span></div>` } if(s.phase==='done'){ const ok = s.choice===s.target; const entry = `<div class="card" style="margin-top:10px"><div class="inline-stat"><span class="chip">Seçimin: <b>${s.pool[s.choice]}</b></span><span class="chip">Hedef: <b>${s.pool[s.target]}</b></span><span class="chip">Durum: <b>${ok? 'Doğru':'Yanlış'}</b></span></div><div style="margin-top:8px"><b>İzlenimler:</b><div class="muted">${(s.impressions||'—').replace(/[<>]/g,'')}</div></div></div>`; return `<div class="section-title">Sonuç</div>${entry}<div class="row" style="margin-top:12px"><button class="btn" onclick="ganzSave()">Kaydet</button><button class="btn secondary" onclick="ganzReset()">Yeni Oturum</button></div>${renderGanzHistory()}` } } return ui(); }
 function ganzChoose(i){ const s=store.get('ganz-state'); s.choice=i; s.phase='done'; store.set('ganz-state',s); go('ganzfeld') }
-function ganzSave(){ const s=store.get('ganz-state'); if(!s||s.phase!=='done') return; const arr=store.get('ganzfeld-sessions', []); const entry={id:s.id, ts:s.ts, pool:s.pool, target:s.target, choice:s.choice, impressions:s.impressions, correct: s.choice===s.target?1:0, n:1}; arr.push(entry); store.set('ganzfeld-sessions', arr); store.del('ganz-state'); alert('Kaydedildi.'); go('ganzfeld') }
+function ganzSave(){ const s=store.get('ganz-state'); if(!s||s.phase!=='done') return; const arr=store.get('ganzfeld-sessions', []); const entry={id:s.id, ts:s.ts, pool:s.pool, target:s.target, choice:s.choice, impressions:s.impressions, correct: s.choice===s.target?1:0, n:1}; arr.push(entry); store.set('ganzfeld-sessions', arr); store.del('ganz-state'); awardBadges(); alert('Kaydedildi.'); go('ganzfeld') }
 function ganzReset(confirmAsk){ if(confirmAsk && !confirm('Oturum sıfırlansın mı?')) return; store.del('ganz-state'); go('ganzfeld') }
-
-function renderGanzHistory(){
-  const arr = store.get('ganzfeld-sessions', []);
-  if(arr.length===0) return `<div class="card" style="margin-top:16px"><div class="muted">Henüz kayıt yok.</div></div>`;
-  const rows = arr.slice().reverse().map(s=> `<tr>
-    <td class="mono">${fmtDate(s.ts)}</td>
-    <td>${s.correct? 'Doğru':'Yanlış'}</td>
-    <td>${s.pool[s.target]}</td>
-    <td>${s.pool[s.choice]}</td>
-    <td class="muted">${(s.impressions||'').slice(0,80)}${(s.impressions||'').length>80?'…':''}</td>
-  </tr>`).join('');
-  const ok = arr.reduce((a,x)=>a+x.correct,0);
-  const series = arr.map(s=> s.correct?100:0 );
-  return `
-  <div class="card" style="margin-top:16px">
-    <div class="section-title">Ganzfeld Geçmişi</div>
-    <div style="margin:6px 0">${series.length? sparkbar(series.slice(-16)) : ''}</div>
-    <div class="kv"><div>Toplam</div><div><b>${ok}/${arr.length}</b> <span class="muted">(${percent(ok/arr.length)})</span></div></div>
-    <div style="overflow:auto">
-      <table style="width:100%; border-collapse:collapse; margin-top:8px">
-        <thead><tr>
-          <th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Tarih</th>
-          <th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Sonuç</th>
-          <th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Hedef</th>
-          <th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Seçim</th>
-          <th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">İzlenim</th>
-        </tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>
-  </div>`
-}
+function renderGanzHistory(){ const arr = store.get('ganzfeld-sessions', []); if(arr.length===0) return `<div class="card" style="margin-top:16px"><div class="muted">Henüz kayıt yok.</div></div>`; const rows = arr.slice().reverse().map(s=> `<tr><td class="mono">${fmtDate(s.ts)}</td><td>${s.correct? 'Doğru':'Yanlış'}</td><td>${s.pool[s.target]}</td><td>${s.pool[s.choice]}</td><td class="muted">${(s.impressions||'').slice(0,80)}${(s.impressions||'').length>80?'…':''}</td></tr>`).join(''); const ok = arr.reduce((a,x)=>a+x.correct,0); const series = arr.map(s=> s.correct?100:0 ); return `<div class="card" style="margin-top:16px"><div class="section-title">Ganzfeld Geçmişi</div><div style="margin:6px 0">${series.length? sparkbar(series.slice(-16)) : ''}</div><div class="kv"><div>Toplam</div><div><b>${ok}/${arr.length}</b> <span class="muted">(${percent(ok/arr.length)})</span></div></div><div style="overflow:auto"><table style="width:100%; border-collapse:collapse; margin-top:8px"><thead><tr><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Tarih</th><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Sonuç</th><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Hedef</th><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Seçim</th><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">İzlenim</th></tr></thead><tbody>${rows}</tbody></table></div></div>` }
 
 // ========== Dreams ==========
-function dreams(){
-  const entries = store.get('dream-entries', []);
-  return `
-  <div class="section-title">Rüya Testi</div>
-  <div class="sub">Kişisel hedef belirle → uyumadan önce niyet → sabah rüyayı yaz → gün sonunda eşleşme işaretle.</div>
-  <div class="card" style="margin-top:10px">
-    <div class="row settings-grid">
-      <div>
-        <label>Hedef / Tema (ör. "kırmızı kapı")</label>
-        <input id="dr-goal" type="text" placeholder="tek bir tema" />
-      </div>
-      <div>
-        <label>Gün</label>
-        <input id="dr-date" type="date" />
-      </div>
-    </div>
-    <label style="margin-top:8px; display:block">Rüya Notu (sabah)</label>
-    <textarea id="dr-note" placeholder="uyanır uyanmaz kısa not…"></textarea>
-    <div class="row" style="margin-top:10px">
-      <button class="btn" onclick="dreamAdd()">Kaydet</button>
-      <button class="btn secondary" onclick="dreamClearForm()">Temizle</button>
-    </div>
-  </div>
-  ${renderDreamList(entries)}
-  `
-}
-
-function dreamAdd(){
-  const goal = document.getElementById('dr-goal').value.trim();
-  const date = document.getElementById('dr-date').value || new Date().toISOString().slice(0,10);
-  const note = document.getElementById('dr-note').value.trim();
-  if(!goal){ alert('Hedef/tema yaz.'); return }
-  const arr = store.get('dream-entries', []);
-  arr.push({ id:uid(), date, ts:Date.now(), goal, note, matched:null });
-  store.set('dream-entries', arr);
-  dreamClearForm(); go('dreams');
-}
+function dreams(){ const entries = store.get('dream-entries', []); return `<div class="section-title">Rüya Testi</div><div class="sub">Kişisel hedef belirle → uyumadan önce niyet → sabah rüyayı yaz → gün sonunda eşleşme işaretle.</div><div class="card" style="margin-top:10px"><div class="row settings-grid"><div><label>Hedef / Tema</label><input id="dr-goal" type="text" placeholder="ör. kırmızı kapı" /></div><div><label>Gün</label><input id="dr-date" type="date" /></div></div><label style="margin-top:8px; display:block">Rüya Notu</label><textarea id="dr-note" placeholder="uyanır uyanmaz kısa not…"></textarea><div class="row" style="margin-top:10px"><button class="btn" onclick="dreamAdd()">Kaydet</button><button class="btn secondary" onclick="dreamClearForm()">Temizle</button></div></div>${renderDreamList(entries)}` }
+function dreamAdd(){ const goal = document.getElementById('dr-goal').value.trim(); const date = document.getElementById('dr-date').value || new Date().toISOString().slice(0,10); const note = document.getElementById('dr-note').value.trim(); if(!goal){ alert('Hedef/tema yaz.'); return } const arr = store.get('dream-entries', []); arr.push({ id:uid(), date, ts:Date.now(), goal, note, matched:null }); store.set('dream-entries', arr); dreamClearForm(); go('dreams'); }
 function dreamClearForm(){ ['dr-goal','dr-date','dr-note'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value='' }) }
 function dreamMatch(id, val){ const arr=store.get('dream-entries', []); const i=arr.findIndex(x=>x.id===id); if(i>=0){ arr[i].matched=val; store.set('dream-entries', arr); go('dreams') } }
 function dreamDel(id){ const arr=store.get('dream-entries', []).filter(x=>x.id!==id); store.set('dream-entries', arr); go('dreams') }
-
-function renderDreamList(entries){
-  if(entries.length===0) return `<div class="card" style="margin-top:14px"><div class="muted">Kayıt yok. Önce bir hedef belirleyip rüyayı yaz.</div></div>`;
-  const ok = entries.filter(x=>x.matched===true).length, no = entries.filter(x=>x.matched===false).length;
-  const rows = entries.slice().reverse().map(x=>`
-    <tr>
-      <td class="mono">${x.date}</td>
-      <td>${x.goal}</td>
-      <td class="muted">${x.note.slice(0,60)}${x.note.length>60?'…':''}</td>
-      <td>
-        ${x.matched===true? '<span class="good">Eşleşti</span>': x.matched===false? '<span class="danger">Eşleşmedi</span>': '<span class="muted">—</span>'}
-      </td>
-      <td>
-        <button class="btn secondary" onclick="dreamMatch('${x.id}', true)">Eşleşti</button>
-        <button class="btn secondary" onclick="dreamMatch('${x.id}', false)">Eşleşmedi</button>
-        <button class="btn secondary" onclick="dreamDel('${x.id}')">Sil</button>
-      </td>
-    </tr>`).join('');
-  return `
-  <div class="card" style="margin-top:14px">
-    <div class="kv"><div>Özet</div><div><b>${ok}</b> eşleşti, <b>${no}</b> eşleşmedi, toplam <b>${entries.length}</b></div></div>
-    <div style="overflow:auto; margin-top:8px">
-      <table style="width:100%; border-collapse:collapse">
-        <thead><tr>
-          <th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Tarih</th>
-          <th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Hedef</th>
-          <th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Rüya Notu</th>
-          <th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Durum</th>
-          <th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Eylem</th>
-        </tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>
-  </div>`
-}
+function renderDreamList(entries){ if(entries.length===0) return `<div class="card" style="margin-top:14px"><div class="muted">Kayıt yok.</div></div>`; const ok = entries.filter(x=>x.matched===true).length, no = entries.filter(x=>x.matched===false).length; const rows = entries.slice().reverse().map(x=>`<tr><td class="mono">${x.date}</td><td>${x.goal}</td><td class="muted">${x.note.slice(0,60)}${x.note.length>60?'…':''}</td><td>${x.matched===true? '<span class="good">Eşleşti</span>': x.matched===false? '<span class="danger">Eşleşmedi</span>': '<span class="muted">—</span>'}</td><td><button class="btn secondary" onclick="dreamMatch('${x.id}', true)">Eşleşti</button><button class="btn secondary" onclick="dreamMatch('${x.id}', false)">Eşleşmedi</button><button class="btn secondary" onclick="dreamDel('${x.id}')">Sil</button></td></tr>`).join(''); return `<div class="card" style="margin-top:14px"><div class="kv"><div>Özet</div><div><b>${ok}</b> eşleşti, <b>${no}</b> eşleşmedi, toplam <b>${entries.length}</b></div></div><div style="overflow:auto; margin-top:8px"><table style="width:100%; border-collapse:collapse"><thead><tr><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Tarih</th><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Hedef</th><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Rüya Notu</th><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Durum</th><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Eylem</th></tr></thead><tbody>${rows}</tbody></table></div></div>` }
 
 // ========== Premonitions ==========
-function premonitions(){
-  const items = store.get('premonitions', []);
-  return `
-  <div class="section-title">Önsezi Günlüğü</div>
-  <div class="sub">Ani his geldiğinde kısa not düş → sonra oldu mu olmadı mı işaretle.</div>
-  <div class="card" style="margin-top:10px">
-    <label>Not (tek cümle)</label>
-    <input id="pr-note" type="text" placeholder="Örn: Bugün ablam arayacak" />
-    <div class="row" style="margin-top:8px">
-      <button class="btn" onclick="premAdd()">Ekle</button>
-      <button class="btn secondary" onclick="document.getElementById('pr-note').value=''">Temizle</button>
-    </div>
-  </div>
-  ${renderPremList(items)}
-  `
-}
-
+function premonitions(){ const items = store.get('premonitions', []); return `<div class="section-title">Önsezi Günlüğü</div><div class="sub">Ani his geldiğinde kısa not düş → sonra oldu mu olmadı mı işaretle.</div><div class="card" style="margin-top:10px"><label>Not (tek cümle)</label><input id="pr-note" type="text" placeholder="Örn: Bugün ablam arayacak" /><div class="row" style="margin-top:8px"><button class="btn" onclick="premAdd()">Ekle</button><button class="btn secondary" onclick="document.getElementById('pr-note').value=''">Temizle</button></div></div>${renderPremList(items)}` }
 function premAdd(){ const v=document.getElementById('pr-note').value.trim(); if(!v) return alert('Bir not yaz.'); const arr=store.get('premonitions', []); arr.push({ id:uid(), ts:Date.now(), note:v, confirmed:null }); store.set('premonitions', arr); document.getElementById('pr-note').value=''; go('premonitions') }
 function premSet(id, val){ const arr=store.get('premonitions', []); const i=arr.findIndex(x=>x.id===id); if(i>=0){ arr[i].confirmed=val; store.set('premonitions', arr); go('premonitions') } }
 function premDel(id){ const arr=store.get('premonitions', []).filter(x=>x.id!==id); store.set('premonitions', arr); go('premonitions') }
+function renderPremList(items){ if(items.length===0) return `<div class="card" style="margin-top:14px"><div class="muted">Henüz kayıt yok.</div></div>`; const yes = items.filter(x=>x.confirmed===true).length, no = items.filter(x=>x.confirmed===false).length; const rows = items.slice().reverse().map(x=>`<tr><td class="mono">${fmtDate(x.ts)}</td><td>${x.note}</td><td>${x.confirmed===true? '<span class="good">Oldu</span>': x.confirmed===false? '<span class="danger">Olmadı</span>': '<span class="muted">—</span>'}</td><td><button class="btn secondary" onclick="premSet('${x.id}', true)">Oldu</button><button class="btn secondary" onclick="premSet('${x.id}', false)">Olmadı</button><button class="btn secondary" onclick="premDel('${x.id}')">Sil</button></td></tr>`).join(''); const rate = (yes+no)? percent(yes/(yes+no)) : '–'; return `<div class="card" style="margin-top:14px"><div class="kv"><div>İsabet Oranı</div><div><b>${yes}</b>/<b>${yes+no}</b> <span class="muted">(${rate})</span></div></div><div style="overflow:auto; margin-top:8px"><table style="width:100%; border-collapse:collapse"><thead><tr><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Zaman</th><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Not</th><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Durum</th><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Eylem</th></tr></thead><tbody>${rows}</tbody></table></div></div>` }
 
-function renderPremList(items){
-  if(items.length===0) return `<div class="card" style="margin-top:14px"><div class="muted">Henüz kayıt yok.</div></div>`;
-  const yes = items.filter(x=>x.confirmed===true).length, no = items.filter(x=>x.confirmed===false).length;
-  const rows = items.slice().reverse().map(x=>`
-    <tr>
-      <td class="mono">${fmtDate(x.ts)}</td>
-      <td>${x.note}</td>
-      <td>${x.confirmed===true? '<span class="good">Oldu</span>': x.confirmed===false? '<span class="danger">Olmadı</span>': '<span class="muted">—</span>'}</td>
-      <td>
-        <button class="btn secondary" onclick="premSet('${x.id}', true)">Oldu</button>
-        <button class="btn secondary" onclick="premSet('${x.id}', false)">Olmadı</button>
-        <button class="btn secondary" onclick="premDel('${x.id}')">Sil</button>
-      </td>
-    </tr>`).join('');
-  const rate = (yes+no)? percent(yes/(yes+no)) : '–';
-  return `
-  <div class="card" style="margin-top:14px">
-    <div class="kv"><div>İsabet Oranı</div><div><b>${yes}</b>/<b>${yes+no}</b> <span class="muted">(${rate})</span></div></div>
-    <div style="overflow:auto; margin-top:8px">
-      <table style="width:100%; border-collapse:collapse">
-        <thead><tr>
-          <th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Zaman</th>
-          <th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Not</th>
-          <th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Durum</th>
-          <th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Eylem</th>
-        </tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>
-  </div>`
+// ========== Remote Viewing (inline SVG target pool) ==========
+const RV_POOL = [
+  {k:'dağ', svg:`<svg width='96' height='64' viewBox='0 0 96 64' xmlns='http://www.w3.org/2000/svg'><rect width='96' height='64' rx='8' fill='#0d131c'/><path d='M8 52 32 20l10 14 10-14 28 32' fill='none' stroke='white' stroke-width='3'/></svg>`},
+  {k:'fener', svg:`<svg width='96' height='64' xmlns='http://www.w3.org/2000/svg'><rect width='96' height='64' rx='8' fill='#0d131c'/><rect x='42' y='20' width='12' height='24' fill='white'/><polygon points='48,16 56,20 40,20' fill='white'/><polygon points='48,28 96,18 96,46' fill='#ffd166' opacity='0.6'/></svg>`},
+  {k:'köprü', svg:`<svg width='96' height='64' xmlns='http://www.w3.org/2000/svg'><rect width='96' height='64' rx='8' fill='#0d131c'/><path d='M8 44h80' stroke='white' stroke-width='3'/><path d='M16 44c10-20 54-20 64 0' stroke='white' stroke-width='3' fill='none'/></svg>`},
+  {k:'palmiye', svg:`<svg width='96' height='64' xmlns='http://www.w3.org/2000/svg'><rect width='96' height='64' rx='8' fill='#0d131c'/><path d='M48 50v-20' stroke='white' stroke-width='3'/><path d='M48 30c10-10 22-8 30 0M48 30c-10-10-22-8-30 0' stroke='white' stroke-width='3' fill='none'/></svg>`},
+  {k:'göz', svg:`<svg width='96' height='64' xmlns='http://www.w3.org/2000/svg'><rect width='96' height='64' rx='8' fill='#0d131c'/><path d='M8 32c12-14 68-14 80 0-12 14-68 14-80 0' fill='none' stroke='white' stroke-width='3'/><circle cx='48' cy='32' r='8' fill='#7c3aed'/></svg>`},
+  {k:'gemi', svg:`<svg width='96' height='64' xmlns='http://www.w3.org/2000/svg'><rect width='96' height='64' rx='8' fill='#0d131c'/><polygon points='20,38 76,38 70,46 26,46' fill='white'/><path d='M14 50h68' stroke='#06b6d4' stroke-width='3'/></svg>`}
+];
+function remote(){
+  const s = store.get('rv-state', null) || { id:uid(), phase:'setup', pool:[], target:0, notes:'', ts:Date.now() };
+  function save(){ store.set('rv-state', s) }
+  if(s.phase==='setup'){
+    // Build pool of 4 unique targets from RV_POOL
+    const pool=[]; while(pool.length<4){ const x = spick(RV_POOL); if(!pool.includes(x)) pool.push(x) } s.pool=pool; s.target=Math.floor(srand()*pool.length); s.phase='view'; save();
+  }
+  if(s.phase==='view'){
+    return `
+    <div class="section-title">Remote Viewing</div>
+    <div class="sub">Aşağıdaki 4 hedeften biri gizlice seçildi. 3–5 dk serbest betimleme yaz, çizim yaparsan tarife ekle (metin).</div>
+    <div class="card" style="margin-top:10px"><b>Hedef Havuzu (4)</b><div class="rv-grid" style="margin-top:8px">${s.pool.map(x=>`<div class='rv-card'><div class='rv-thumb'>${x.svg}</div></div>`).join('')}</div></div>
+    <label class="muted" style="display:block; margin:10px 0 6px">Betimleme / İpuçları</label>
+    <textarea oninput="(function(v){ const s=store.get('rv-state'); s.notes=v; store.set('rv-state',s) })(this.value)">${s.notes||''}</textarea>
+    <div class="row" style="margin-top:10px">
+      <button class="btn" onclick="(function(){ const s=store.get('rv-state'); s.phase='choose'; store.set('rv-state',s); go('remote') })()">Seçime Geç</button>
+      <button class="btn secondary" onclick="rvReset(true)">Oturumu Sıfırla</button>
+    </div>`
+  }
+  if(s.phase==='choose'){
+    return `
+    <div class="section-title">Seçim</div>
+    <div class="sub">Hangi hedefe en çok benziyor?</div>
+    <div class="row" style="margin-top:10px">${s.pool.map((x,i)=>`<button class="btn secondary" onclick="rvChoose(${i})">${i+1}</button>`).join('')}</div>
+    <div class="foot">RNG seed: <span class="mono">${store.get('rng-seed')}</span></div>`
+  }
+  if(s.phase==='done'){
+    const ok = s.choice===s.target;
+    const entry = `<div class="card" style="margin-top:10px"><div class="inline-stat"><span class="chip">Seçimin: <b>${s.choice+1}</b></span><span class="chip">Hedef: <b>${s.target+1}</b></span><span class="chip">Durum: <b>${ok? 'Doğru':'Yanlış'}</b></span></div><div class="row" style="margin-top:10px">${s.pool.map((x,i)=>`<div class='rv-thumb' title='${i+1}'>${x.svg}</div>`).join('')}</div><div style="margin-top:8px"><b>Betimleme:</b><div class="muted">${(s.notes||'—').replace(/[<>]/g,'')}</div></div></div>`;
+    return `<div class="section-title">Remote Viewing Sonuç</div>${entry}<div class="row" style="margin-top:12px"><button class="btn" onclick="rvSave()">Kaydet</button><button class="btn secondary" onclick="rvReset()">Yeni Oturum</button></div>${renderRVHistory()}`
+  }
 }
+function rvChoose(i){ const s=store.get('rv-state'); s.choice=i; s.phase='done'; store.set('rv-state',s); go('remote') }
+function rvSave(){ const s=store.get('rv-state'); if(!s||s.phase!=='done') return; const arr=store.get('rv-sessions', []); const entry={id:s.id, ts:s.ts, pool:s.pool.map(p=>p.k), target:s.target, choice:s.choice, notes:s.notes, correct: s.choice===s.target?1:0}; arr.push(entry); store.set('rv-sessions', arr); store.del('rv-state'); awardBadges(); alert('Kaydedildi.'); go('remote') }
+function rvReset(confirmAsk){ if(confirmAsk && !confirm('Oturum sıfırlansın mı?')) return; store.del('rv-state'); go('remote') }
+function renderRVHistory(){ const arr = store.get('rv-sessions', []); if(arr.length===0) return `<div class="card" style="margin-top:16px"><div class="muted">Henüz kayıt yok.</div></div>`; const rows = arr.slice().reverse().map(s=> `<tr><td class="mono">${fmtDate(s.ts)}</td><td>${s.correct? 'Doğru':'Yanlış'}</td><td>${s.pool[s.target]}</td><td>${s.pool[s.choice]}</td><td class="muted">${(s.notes||'').slice(0,80)}${(s.notes||'').length>80?'…':''}</td></tr>`).join(''); const ok = arr.reduce((a,x)=>a+x.correct,0); const series = arr.map(s=> s.correct?100:0 ); return `<div class="card" style="margin-top:16px"><div class="section-title">Remote Viewing Geçmişi</div><div style="margin:6px 0">${series.length? sparkbar(series.slice(-16)) : ''}</div><div class="kv"><div>Toplam</div><div><b>${ok}/${arr.length}</b> <span class="muted">(${percent(ok/arr.length)})</span></div></div><div style="overflow:auto"><table style="width:100%; border-collapse:collapse; margin-top:8px"><thead><tr><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Tarih</th><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Sonuç</th><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Hedef</th><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Seçim</th><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Not</th></tr></thead><tbody>${rows}</tbody></table></div></div>` }
 
 // ========== About ==========
-function about(){
-  return `
-  <div class="section-title">Hakkında / Uyarı</div>
-  <p>Bu site eğlence ve kişisel merak içindir. Sonuçlar bilimsel teşhis, tedavi, finansal veya güvenlik kararlarının <b>yerine geçmez</b>.</p>
-  <ul class="list">
-    <li>Veri gizliliği: Kayıtların yalnızca tarayıcında saklanır (localStorage). Sunucuya gönderilmez.</li>
-    <li>Paylaşmak istersen JSON/CSV indirip dilediğin yerde saklayabilirsin.</li>
-    <li>Kendini kötü hissettiğin anlarda ara ver. Uyku/anksiyete bozuluyorsa bu deneyleri durdur.</li>
-  </ul>
-  <p class="muted">© Tabirly — ESP mini testleri. Tasarım: hafif, tek dosya, GitHub Pages uyumlu.</p>`
-}
+function about(){ return `<div class="section-title">Hakkında / Uyarı</div><p>Bu site eğlence ve kişisel merak içindir. Sonuçlar bilimsel teşhis, tedavi, finansal veya güvenlik kararlarının <b>yerine geçmez</b>.</p><ul class="list"><li>Veri gizliliği: Kayıtların yalnızca tarayıcında saklanır (localStorage). Sunucuya gönderilmez.</li><li>JSON/CSV dışa aktar; başka cihazda içe aktar.</li><li>Kendini kötü hissedersen ara ver.</li></ul><p class="muted">© Tabirly — ESP mini testleri. Tek dosya, GitHub Pages uyumlu.</p>` }
 
 // ========== Settings ==========
-function settings(){
-  const seed = store.get('rng-seed');
-  return `
-  <div class="section-title">${t('settings')}</div>
-  <div class="card" style="margin-top:8px">
-    <div class="section-title">${t('rng_seed')}</div>
-    <p class="muted">${t('rng_note')}</p>
-    <div class="settings-grid">
-      <div>
-        <label>${t('rng_seed')}</label>
-        <input id="seedInput" type="number" value="${seed}" />
-      </div>
-      <div class="flex-center" style="margin-top:22px">
-        <button class="btn secondary" onclick="document.getElementById('seedInput').value = (Date.now() & 0xffffffff)>>>0">${t('randomize')}</button>
-        <button class="btn" onclick="setSeed(document.getElementById('seedInput').value); alert('Seed güncellendi'); go('settings')">${t('set_seed')}</button>
-      </div>
-    </div>
-  </div>
-  <div class="card" style="margin-top:12px">
-    <div class="section-title">${t('theme')}</div>
-    <div class="settings-grid">
-      <div>
-        <label>${t('brand_primary')}</label>
-        <input id="c1" type="color" value="${getComputedStyle(document.documentElement).getPropertyValue('--brand').trim()||'#7c3aed'}" />
-      </div>
-      <div>
-        <label>${t('brand_secondary')}</label>
-        <input id="c2" type="color" value="${getComputedStyle(document.documentElement).getPropertyValue('--brand2').trim()||'#06b6d4'}" />
-      </div>
-    </div>
-    <div class="row" style="margin-top:10px">
-      <button class="btn" onclick="applyTheme()">${t('save')}</button>
-    </div>
-  </div>`
-}
-
+function settings(){ const seed = store.get('rng-seed'); const theme = store.get('theme'); const prof = getProfile(); return `<div class="section-title">${t('settings')}</div><div class="card" style="margin-top:8px"><div class="section-title">${t('rng_seed')}</div><p class="muted">${t('rng_note')}</p><div class="settings-grid"><div><label>${t('rng_seed')}</label><input id="seedInput" type="number" value="${seed}" /></div><div class="flex-center" style="margin-top:22px"><button class="btn secondary" onclick="document.getElementById('seedInput').value = (Date.now() & 0xffffffff)>>>0">${t('randomize')}</button><button class="btn" onclick="setSeed(document.getElementById('seedInput').value); alert('Seed güncellendi'); go('settings')">${t('set_seed')}</button></div></div></div><div class="card" style="margin-top:12px"><div class="section-title">${t('theme')}</div><div class="settings-grid"><div><label>${t('brand_primary')}</label><input id="c1" type="color" value="${(theme&&theme.c1)||'#7c3aed'}" /></div><div><label>${t('brand_secondary')}</label><input id="c2" type="color" value="${(theme&&theme.c2)||'#06b6d4'}" /></div></div><div class="row" style="margin-top:10px"><button class="btn" onclick="applyTheme()">${t('save')}</button></div></div><div class="card" style="margin-top:12px"><div class="section-title">${t('profile')}</div><div class="settings-grid"><div><label>${t('name')}</label><input id="pname" type="text" value="${prof.name}" /></div></div><div class="row" style="margin-top:10px"><button class="btn" onclick="(function(){ const p=getProfile(); p.name = document.getElementById('pname').value; setProfile(p); alert('Profil kaydedildi'); go('settings') })()">${t('save')}</button></div></div>` }
 function applyTheme(){ const c1=document.getElementById('c1').value, c2=document.getElementById('c2').value; document.documentElement.style.setProperty('--brand', c1); document.documentElement.style.setProperty('--brand2', c2); store.set('theme', {c1,c2}); alert('Tema güncellendi'); }
-(function restoreTheme(){ const t=store.get('theme'); if(t){ document.documentElement.style.setProperty('--brand', t.c1); document.documentElement.style.setProperty('--brand2', t.c2) } })();
+(function restoreTheme(){ const th=store.get('theme'); if(th){ document.documentElement.style.setProperty('--brand', th.c1); document.documentElement.style.setProperty('--brand2', th.c2) } })();
 
-// ========== Export / Import ==========
-function exportJSON(){ const data = {}; ['zener-sessions','ganzfeld-sessions','dream-entries','premonitions','rng-seed','theme'].forEach(k=> data[k]=store.get(k, []) ); download('tabirly-esp-data.json', JSON.stringify({version:2, exportedAt:Date.now(), lang:LANG, data}, null, 2)); }
+// ========== Export / Import / Share Image ==========
+function exportJSON(){ const data = {}; ['zener-sessions','ganzfeld-sessions','dream-entries','premonitions','rng-seed','theme','profile','rv-sessions'].forEach(k=> data[k]=store.get(k, []) ); download('tabirly-esp-data.json', JSON.stringify({version:3, exportedAt:Date.now(), lang:LANG, data}, null, 2)); }
 function exportCSV(){ function toCSV(rows){ return rows.map(r=> r.map(x=> '"'+String(x).replace(/"/g,'""')+'"').join(',')).join('
 ') } const z = store.get('zener-sessions', []).map(s=> [new Date(s.ts).toISOString(), s.hits, s.n, (s.hits/s.n).toFixed(3)]); const g = store.get('ganzfeld-sessions', []).map(s=> [new Date(s.ts).toISOString(), s.pool[s.target], s.pool[s.choice], s.correct]); const d = store.get('dream-entries', []).map(x=> [x.date, x.goal, (x.note||'').replace(/
-/g,' '), x.matched]); const p = store.get('premonitions', []).map(x=> [new Date(x.ts).toISOString(), x.note, x.confirmed]); const parts = [ ['# Zener: ts,hits,n,ratio'], ...z, [''], ['# Ganzfeld: ts,target,choice,correct(1/0)'], ...g, [''], ['# Dreams: date,goal,note,matched(true/false/null)'], ...d, [''], ['# Premonitions: ts,note,confirmed(true/false/null)'], ...p ]; download('tabirly-esp-data.csv', toCSV(parts)); }
-function importJSON(ev){ const file = ev.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = () => { try{ const obj = JSON.parse(reader.result); if(!obj || !obj.data) throw new Error('Geçersiz JSON'); const d = obj.data; ['zener-sessions','ganzfeld-sessions','dream-entries','premonitions','rng-seed','theme'].forEach(k=>{ if(d[k]!==undefined){ store.set(k, d[k]); if(k==='rng-seed') setSeed(d[k]) } }); const th = d['theme']; if(th){ document.documentElement.style.setProperty('--brand', th.c1); document.documentElement.style.setProperty('--brand2', th.c2) } alert('Veriler yüklendi.'); location.reload(); }catch(e){ alert('Yükleme hatası: '+e.message) } }; reader.readAsText(file); }
+/g,' '), x.matched]); const p = store.get('premonitions', []).map(x=> [new Date(x.ts).toISOString(), x.note, x.confirmed]); const rv = store.get('rv-sessions', []).map(s=> [new Date(s.ts).toISOString(), s.pool[s.target], s.pool[s.choice], s.correct]); const parts = [ ['# Zener: ts,hits,n,ratio'], ...z, [''], ['# Ganzfeld: ts,target,choice,correct(1/0)'], ...g, [''], ['# Remote: ts,target,choice,correct(1/0)'], ...rv, [''], ['# Dreams: date,goal,note,matched(true/false/null)'], ...d, [''], ['# Premonitions: ts,note,confirmed(true/false/null)'], ...p ]; download('tabirly-esp-data.csv', toCSV(parts)); }
+function importJSON(ev){ const file = ev.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = () => { try{ const obj = JSON.parse(reader.result); if(!obj || !obj.data) throw new Error('Geçersiz JSON'); const d = obj.data; ['zener-sessions','ganzfeld-sessions','dream-entries','premonitions','rng-seed','theme','profile','rv-sessions'].forEach(k=>{ if(d[k]!==undefined){ store.set(k, d[k]); if(k==='rng-seed') setSeed(d[k]) } }); const th = d['theme']; if(th){ document.documentElement.style.setProperty('--brand', th.c1); document.documentElement.style.setProperty('--brand2', th.c2) } alert('Veriler yüklendi.'); location.reload(); }catch(e){ alert('Yükleme hatası: '+e.message) } }; reader.readAsText(file); }
+
+function shareImage(){
+  // Basit paylaşılabilir PNG raporu (canvas)
+  const z = store.get('zener-sessions', []); const g = store.get('ganzfeld-sessions', []); const rv = store.get('rv-sessions', []); const d = store.get('dream-entries', []); const p = store.get('premonitions', []);
+  const zHits = z.reduce((a,s)=>a+s.hits,0), zN = z.reduce((a,s)=>a+s.n,0);
+  const gHits = g.reduce((a,s)=>a+s.correct,0), gN = g.reduce((a,s)=>a+s.n,0);
+  const rvHits = rv.reduce((a,s)=>a+s.correct,0);
+  const dMatch = d.filter(x=>x.matched===true).length;
+  const pHit = p.filter(x=>x.confirmed===true).length;
+  const name = (getProfile().name||'Tabirly User');
+  const seed = store.get('rng-seed');
+  const w=1000,h=560; const c=document.createElement('canvas'); c.width=w; c.height=h; const ctx=c.getContext('2d');
+  // BG
+  const ggrad=ctx.createLinearGradient(0,0,w,h); ggrad.addColorStop(0,'#0b0e13'); ggrad.addColorStop(1,'#0a0d12'); ctx.fillStyle=ggrad; ctx.fillRect(0,0,w,h);
+  // Title
+  ctx.fillStyle='#06b6d4'; ctx.font='700 28px Inter, system-ui, sans-serif'; ctx.fillText('Tabirly • ESP Report', 24, 44);
+  ctx.fillStyle='#8aa0b3'; ctx.font='16px Inter, system-ui, sans-serif'; ctx.fillText(new Date().toLocaleString(), 24, 68);
+  // Name & seed
+  ctx.fillStyle='#e6eef5'; ctx.font='20px Inter, system-ui, sans-serif'; ctx.fillText(''+name, 24, 108); ctx.fillStyle='#8aa0b3'; ctx.font='14px Inter, system-ui, sans-serif'; ctx.fillText('Seed: '+seed, 24, 132);
+  // Cards
+  function card(x,y,wc,hc,title,lines){ ctx.fillStyle='rgba(255,255,255,0.04)'; ctx.strokeStyle='rgba(255,255,255,0.12)'; ctx.lineWidth=1; roundRect(ctx,x,y,wc,hc,16,true,true); ctx.fillStyle='#e6eef5'; ctx.font='700 18px Inter, system-ui, sans-serif'; ctx.fillText(title,x+16,y+28); ctx.fillStyle='#8aa0b3'; ctx.font='16px Inter, system-ui, sans-serif'; lines.forEach((ln,i)=> ctx.fillText(ln,x+16,y+60+i*22) ) }
+  function roundRect(ctx,x,y,w,h,r,fill,stroke){ if (typeof r === 'number') { r = {tl:r, tr:r, br:r, bl:r}; } ctx.beginPath(); ctx.moveTo(x+r.tl, y); ctx.lineTo(x+w-r.tr, y); ctx.quadraticCurveTo(x+w, y, x+w, y+r.tr); ctx.lineTo(x+w, y+h-r.br); ctx.quadraticCurveTo(x+w, y+h, x+w-r.br, y+h); ctx.lineTo(x+r.bl, y+h); ctx.quadraticCurveTo(x, y+h, x, y+h-r.bl); ctx.lineTo(x, y+r.tl); ctx.quadraticCurveTo(x, y, x+r.tl, y); ctx.closePath(); if(fill) ctx.fill(); if(stroke) ctx.stroke(); }
+  card(24,160,300,140,'Zener', [ `Toplam: ${zHits}/${zN}`, `Oran: ${zN? (zHits/zN*100).toFixed(1)+'%':'—'}` ]);
+  card(348,160,300,140,'Ganzfeld', [ `Toplam: ${gHits}/${gN}`, `Oran: ${gN? (gHits/gN*100).toFixed(1)+'%':'—'}` ]);
+  card(672,160,300,140,'Remote', [ `Toplam: ${rvHits}/${rv.length}`, `—` ]);
+  card(24,320,300,140,'Rüya', [ `Eşleşme: ${dMatch}/${d.length}` ]);
+  card(348,320,300,140,'Önsezi', [ `İsabet: ${pHit}/${p.length}` ]);
+  // Footer
+  ctx.fillStyle='#8aa0b3'; ctx.font='12px Inter, system-ui, sans-serif'; ctx.fillText('Eğlence amaçlıdır. © Tabirly', 24, h-20);
+  const url = c.toDataURL('image/png'); const a=document.createElement('a'); a.href=url; a.download='tabirly-esp-report.png'; a.click(); }
 
 // init
 renderNav();
