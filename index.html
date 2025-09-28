@@ -252,7 +252,8 @@ function go(id){
   const view = document.getElementById('view');
   Array.from(document.querySelectorAll('.nav button')).forEach(b=>b.classList.remove('active'));
   const nb = document.getElementById('nav-'+id); if(nb) nb.classList.add('active');
-  view.innerHTML = views[id] ? views[id](): '<p>Not found</p>';
+  view.innerHTML = views[id] ? views[id]() : '<p>Bulunamadı</p>';
+  if(id === 'about') { aboutTab('intro'); }   // <<< ek satır
 }
 
 // ========== Helpers ==========
@@ -406,171 +407,318 @@ function renderRVHistory(){ const arr = store.get('rv-sessions', []); if(arr.len
 // ========== About ==========
 function about(){
   return `
-  <div class="section-title">${t('about')}</div>
-  <div class="tabs">
-    <button onclick="aboutTab('intro')">${LANG==='tr'?'Intro & Gizlilik':'Intro & Privacy'}</button>
-    <button onclick="aboutTab('zener')">${LANG==='tr'?'Zener Kart Testi':'Zener Card Test'}</button>
-    <button onclick="aboutTab('ganz')">Mini-Ganzfeld</button>
-    <button onclick="aboutTab('ruya')">${LANG==='tr'?'Rüya Testi':'Dream Test'}</button>
-    <button onclick="aboutTab('rv')">Remote Viewing</button>
-    <button onclick="aboutTab('onsezi')">${LANG==='tr'?'Önsezi Günlüğü':'Premonition Log'}</button>
-    <button onclick="aboutTab('seed')">RNG Seed</button>
+  <div class="section-title">${LANG==='tr'?'Hakkında / Rehber':'About / Guide'}</div>
+
+  <div class="row tabs" style="gap:8px;margin:6px 0 12px">
+    <button class="btn secondary" onclick="aboutTab('intro')">${LANG==='tr'?'Intro & Gizlilik':'Intro & Privacy'}</button>
+    <button class="btn secondary" onclick="aboutTab('zener')">Zener</button>
+    <button class="btn secondary" onclick="aboutTab('ganz')">Mini-Ganzfeld</button>
+    <button class="btn secondary" onclick="aboutTab('ruya')">${LANG==='tr'?'Rüya Testi':'Dream Test'}</button>
+    <button class="btn secondary" onclick="aboutTab('rv')">Remote Viewing</button>
+    <button class="btn secondary" onclick="aboutTab('onsezi')">${LANG==='tr'?'Önsezi Günlüğü':'Premonition Log'}</button>
+    <button class="btn secondary" onclick="aboutTab('seed')">RNG Seed</button>
   </div>
 
+  <!-- Intro -->
   <div id="about-intro" class="about-tab">
     <p><b>Tabirly • ESP Self-Test</b> ${LANG==='tr'
-      ? 'tamamen <b>eğlence ve merak</b> içindir. Sonuçlar bilimsel/medikal/finansal kararların yerine <b>geçmez</b>.'
-      : 'is for <b>fun and curiosity</b> only. Results do not replace scientific/medical/financial decisions.'}</p>
-    <p><b>${LANG==='tr'?'Veri Gizliliği':'Privacy'}:</b> ${LANG==='tr'
-      ? 'Tüm veriler tarayıcınızda (localStorage) saklanır. Sunucuya gönderim yok. JSON/CSV dışa aktarabilirsiniz.'
-      : 'All data stays in your browser (localStorage). Nothing is uploaded. You can export JSON/CSV.'}</p>
+      ? 'tamamen eğlence ve merak içindir; sonuçlar bilimsel/medikal/finansal kararların yerine geçmez.'
+      : 'is purely for fun and curiosity; results are not a substitute for scientific/medical/financial decisions.'}</p>
+    <p><b>${LANG==='tr'?'Veri Gizliliği':'Privacy'}:</b>
+      ${LANG==='tr'
+        ? 'Tüm veriler tarayıcındadır (localStorage). Sunucuya yüklenmez. JSON/CSV dışa aktarabilir, tek tıkla silebilirsin.'
+        : 'All data stays in your browser (localStorage). Nothing is uploaded. You can export JSON/CSV or wipe everything with one click.'}
+    </p>
     <p class="muted">${LANG==='tr'
-      ? 'Bu testler “paranormal yetenek ölçümü” değildir; sezgileri oyunvari şekilde keşfetmek içindir.'
-      : 'These are not “paranormal ability measurements”; they are playful explorations of intuition.'}</p>
+      ? 'Bu testler “paranormal yetenek ölçümü” değildir; sezgi/yanlılık ve deneyim odaklıdır.'
+      : 'These are not “paranormal ability measurements”; they focus on intuition/bias and experience.'}</p>
   </div>
 
+  <!-- Zener -->
   <div id="about-zener" class="about-tab" style="display:none">
-<h3>🃏 Zener</h3>
+    <h3>🃏 Zener</h3>
 
-<p>
-  ${LANG==='tr'
-    ? '5 sembol (⭐ ⚫ ➕ ◼ 🌊) ile 25 tur tahmin yaparsın. Her turda içinden gelen ilk tahmini seç; geri dönme veya yaz-boz yoktur. 25 tur bittiğinde “Seansı Kaydet”e bas; tek seferlik sonuç yerine seri halinde birkaç oturum yap. Şans düzeyi p=0.2 kabul edilirse, beklenen doğru sayısı yaklaşık 5’tir.'
-    : 'You make 25 trials with 5 symbols (⭐ ⚫ ➕ ◼ 🌊). In each trial, choose the first impression; do not backtrack or revise. When 25 trials are over, press “Save Session”; prefer a series of multiple sessions rather than relying on a single one. With chance level p=0.2, the expected number of correct responses is about 5.'}
-</p>
+    <p>
+      ${LANG==='tr'
+        ? '5 sembol (⭐ ⚫ ➕ ◼ 🌊) ile 25 tur tahmin yaparsın. Her turda içinden gelen ilk tahmini seç; geri dönme veya yaz-boz yoktur. 25 tur bittiğinde “Seansı Kaydet”e bas; tek seferlik sonuç yerine seri halinde birkaç oturum yap. Şans düzeyi p=0.2 kabul edilirse, beklenen doğru sayısı yaklaşık 5’tir.'
+        : 'You make 25 trials with 5 symbols (⭐ ⚫ ➕ ◼ 🌊). In each trial, choose the first impression; do not backtrack or revise. When 25 trials are over, press “Save Session”; prefer a series of multiple sessions rather than a single one. With chance level p=0.2, the expected number of correct responses is about 5.'}
+    </p>
 
-<p>
-  <b>${LANG==='tr' ? 'Amaç' : 'Goal'}:</b>
-  ${LANG==='tr'
-    ? '“Sezgisel eşleşme” gibi anlık seçim davranışında hedef dışı örüntüler (yanlılık / hafif avantaj) olup olmadığını şans modeline göre test etmek; sonuç binom dağılımının kuyruk olasılığıyla gösterilir.'
-    : 'To test, against a chance model, whether there are off-target patterns in instantaneous choice behavior (bias / slight advantage) such as “intuitive matching”; the outcome is summarized via the tail probability of the binomial distribution.'}
-</p>
+    <p>
+      <b>${LANG==='tr' ? 'Amaç' : 'Goal'}:</b>
+      ${LANG==='tr'
+        ? '“Sezgisel eşleşme” gibi anlık seçim davranışında hedef dışı örüntüler (yanlılık / hafif avantaj) olup olmadığını şans modeline göre test etmek; sonuç binom dağılımının kuyruk olasılığıyla gösterilir.'
+        : 'To test, against a chance model, whether instantaneous choice behavior shows off-target patterns (bias / slight advantage); summarized via the tail probability of the binomial distribution.'}
+    </p>
 
-<p><b>${LANG==='tr' ? 'Ne Ölçer?' : 'What Does It Measure?'}</b></p>
-<ul>
-  <li>
-    ${LANG==='tr'
-      ? 'İsabet oranı = doğru / deneme.'
-      : 'Hit rate = correct / trials.'}
-  </li>
-  <li>
-    ${LANG==='tr'
-      ? 'Binom kuyruk olasılığı <code>P(X ≥ k; n, p = 0.2)</code> — belirli bir isabet sayısına yalnızca şansla ulaşma olasılığı.'
-      : 'Binomial tail probability <code>P(X ≥ k; n, p = 0.2)</code> — the probability of reaching a given hit count by chance alone.'}
-  </li>
-</ul>
-
-<p><b>${LANG==='tr' ? 'Sonuçları Nasıl Yorumlarım?' : 'How Do I Interpret the Results?'}</b></p>
-<ul>
-  <li>
-    ${LANG==='tr'
-      ? 'p-değeri yüksekse (ör. %10 ve üzeri) bu, normal dalgalanma aralığına işaret eder; şansla açıkça mümkün.'
-      : 'If the p-value is high (e.g., ≥10%), it indicates normal fluctuation; clearly compatible with chance.'}
-  </li>
-  <li>
-    ${LANG==='tr'
-      ? 'p-değeri çok düşükse (ör. &lt;%1) seri içinde istatistiksel olarak şaşırtıcı bir durum olabilir; yeni oturumlarla teyit etmeye çalış.'
-      : 'If the p-value is very low (e.g., &lt;1%), the series may be statistically surprising; try to confirm with additional sessions.'}
-  </li>
-  <li>
-    ${LANG==='tr'
-      ? 'Tek oturum üzerinden hüküm verme; 5–10 oturumdan oluşan bir seri daha değerlidir.'
-      : 'Do not draw conclusions from a single session; a series of 5–10 sessions is more informative.'}
-  </li>
-</ul>
-
-<p><b>${LANG==='tr' ? 'Sık Yapılan Hatalar' : 'Common Mistakes'}</b></p>
-<ul>
-  <li>
-    ${LANG==='tr'
-      ? 'Geri dönüp “tahmini düzeltmek” veriyi bozar.'
-      : 'Backtracking to “fix” a guess corrupts the data.'}
-  </li>
-  <li>
-    ${LANG==='tr'
-      ? '“Hissedene kadar beklemek” karar süresini uzatır; ilk izlenimle seç.'
-      : '“Waiting until it feels right” prolongs decision time; choose based on the first impression.'}
-  </li>
-  <li>
-    ${LANG==='tr'
-      ? 'Sembol frekansını ezberleyip karşı hamle yapmak (“kareler çok geldi, sırada yıldız vardır” gibi) yanlılık üretir.'
-      : 'Trying to outsmart symbol frequency (e.g., “many squares appeared, so a star must be next”) introduces bias.'}
-  </li>
-</ul>
-
-<p><b>${LANG==='tr' ? 'İpuçları' : 'Tips'}</b></p>
-<ul>
-  <li>
-    ${LANG==='tr'
-      ? 'Oturumdan önce kısa ve sabit bir rutin uygula (30–60 sn nefes sayma, dikkat toplama).'
-      : 'Use a brief, consistent pre-session routine (30–60 seconds of breath counting and focusing attention).'}
-  </li>
-  <li>
-    ${LANG==='tr'
-      ? 'Tohum (seed) sabitse, farklı günlerdeki sonuçları karşılaştırmak daha kolay olur.'
-      : 'If the seed is fixed, comparing results across different days becomes easier.'}
-  </li>
-  <li>
-    ${LANG==='tr'
-      ? 'Aynı gün art arda çok oturum yapma; yorgunluk etkisi artar.'
-      : 'Avoid running too many sessions back-to-back on the same day; fatigue effects increase.'}
-  </li>
-</ul>
-
-
-  <div id="about-ganz" class="about-tab" style="display:none">
-    <h3>🔮 Mini-Ganzfeld</h3>
-    <p>${LANG==='tr'
-      ? '4 gizli hedeften biri seçilir. Önce izlenimlerini yaz, sonra seçim yap.'
-      : 'One of 4 targets is hidden. Write impressions first, then choose.'}</p>
+    <p><b>${LANG==='tr' ? 'Ne Ölçer?' : 'What Does It Measure?'}</b></p>
     <ul>
-      <li>${LANG==='tr'?'Önce not → sonra seçim (bias azalır).':'Notes first → choice later (reduces bias).'}</li>
-      <li>${LANG==='tr'?'Şans oranı %25.':'Chance level 25%.'}</li>
-      <li>${LANG==='tr'?'20–30 oturumda anlam artar.':'Meaningful over 20–30 sessions.'}</li>
+      <li>${LANG==='tr' ? 'İsabet oranı = doğru / deneme.' : 'Hit rate = correct / trials.'}</li>
+      <li>${LANG==='tr'
+          ? 'Binom kuyruk olasılığı <code>P(X ≥ k; n, p = 0.2)</code> — belirli bir isabet sayısına yalnızca şansla ulaşma olasılığı.'
+          : 'Binomial tail probability <code>P(X ≥ k; n, p = 0.2)</code> — probability of hitting at least k by chance alone.'}
+      </li>
+    </ul>
+
+    <p><b>${LANG==='tr' ? 'Sonuçları Nasıl Yorumlarım?' : 'How Do I Interpret the Results?'}</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'p-değeri yüksekse (≥%10) normal dalgalanma; şansla uyumlu.' : 'High p-value (≥10%) ⇒ normal fluctuation; compatible with chance.'}</li>
+      <li>${LANG==='tr' ? 'p-değeri çok düşükse (&lt;%1) seri içinde şaşırtıcı olabilir; yeni oturumlarla teyit et.' : 'Very low p (&lt;1%) may be surprising; try to confirm with more sessions.'}</li>
+      <li>${LANG==='tr' ? 'Tek oturumla hüküm verme; 5–10 oturumluk seri daha değerlidir.' : 'Don’t judge from a single session; use 5–10 session series.'}</li>
+    </ul>
+
+    <p><b>${LANG==='tr' ? 'Sık Yapılan Hatalar' : 'Common Mistakes'}</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'Geri dönüp tahmini düzeltmek veriyi bozar.' : 'Backtracking to “fix” a guess corrupts data.'}</li>
+      <li>${LANG==='tr' ? '“Hissedene kadar beklemek” karar süresini uzatır; ilk izlenimle seç.' : '“Waiting until it feels right” prolongs decisions; pick the first impression.'}</li>
+      <li>${LANG==='tr' ? 'Sembol frekansını tahmin etmeye çalışmak yanlılık üretir.' : 'Trying to outsmart symbol frequency introduces bias.'}</li>
+    </ul>
+
+    <p><b>${LANG==='tr' ? 'İpuçları' : 'Tips'}</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'Kısa ve sabit bir ön-rutin uygula (30–60 sn nefes sayma).' : 'Use a brief, consistent pre-session routine (30–60s breath counting).'}</li>
+      <li>${LANG==='tr' ? 'Seed sabitse günler arası kıyas kolaylaşır.' : 'A fixed seed makes across-day comparison easier.'}</li>
+      <li>${LANG==='tr' ? 'Aynı gün peş peşe çok oturum yapma.' : 'Avoid too many back-to-back sessions.'}</li>
     </ul>
   </div>
 
+  <!-- Mini-Ganzfeld -->
+  <div id="about-ganz" class="about-tab" style="display:none">
+    <h3>🔮 Mini-Ganzfeld</h3>
+    <p>
+      ${LANG==='tr'
+        ? 'Sistem dört gizli hedef kavram üretir (ör. “Kırmızı kapı, Gitar, Karlı dağ, Şimşek”). Aşama 1 — İzlenim: 2–5 dakika serbest çağrışım notları yaz. Aşama 2 — Seçim: Yazdıklarınla en çok uyuşan hedefi seç ve kaydet.'
+        : 'The system generates four hidden targets. Stage 1 — Impressions: free-association notes for 2–5 minutes. Stage 2 — Choice: pick the target that best matches your notes and save.'}
+    </p>
+    <ul>
+      <li>${LANG==='tr' ? 'Önce not → sonra seçim (bias azalır).' : 'Notes first → choice later (reduces bias).'}</li>
+      <li>${LANG==='tr' ? 'Şans düzeyi 1/4 (p=0.25).' : 'Chance level 1/4 (p=0.25).'}</li>
+      <li>${LANG==='tr' ? '20–30 oturumluk seri tercih edin.' : 'Prefer 20–30 session series.'}</li>
+    </ul>
+    <p><b>${LANG==='tr' ? 'Amaç' : 'Goal'}:</b>
+      ${LANG==='tr'
+        ? 'Dış uyaranı azaltıp zihinsel içerik ↔ gizli hedef benzerliğini araştırmak.'
+        : 'Minimize external stimuli to examine similarity between mental content and the hidden target.'}
+    </p>
+    <p><b>${LANG==='tr' ? 'Ne Ölçer?' : 'What Does It Measure?'}:</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'Oturum bazında doğru/yanlış.' : 'Per-session hit/miss.'}</li>
+      <li>${LANG==='tr' ? 'Seri isabet oranı + mini trend grafiği.' : 'Series hit rate + mini trend chart.'}</li>
+    </ul>
+    <p><b>${LANG==='tr' ? 'Yorum' : 'Interpretation'}:</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'Tek oturumluk sonuç kanıt değildir.' : 'Single-session result isn’t evidence.'}</li>
+      <li>${LANG==='tr' ? 'Uzun seride kalıcı yüksek oran dikkat çekicidir.' : 'Persistent above-chance rate across long series is notable.'}</li>
+      <li>${LANG==='tr' ? 'Ana motif mi yoksa zorlama benzetme mi?' : 'Main motifs vs forced analogies?'}</li>
+    </ul>
+    <p><b>${LANG==='tr' ? 'Hatalar' : 'Mistakes'}:</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'Notu çok kısa tutmak.' : 'Notes too brief.'}</li>
+      <li>${LANG==='tr' ? 'Havuzu görüp ona göre yazmak (ankor).' : 'Seeing pool then shaping notes (anchoring).'}</li>
+      <li>${LANG==='tr' ? 'Aşırı spesifik isim/nesneye kilitlenmek.' : 'Locking onto an overly specific object/name.'}</li>
+    </ul>
+    <p><b>${LANG==='tr' ? 'İpuçları' : 'Tips'}:</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'Duyusal etiketlerle yaz (renk/doku/hareket).' : 'Use sensory labels (color/texture/motion).'}</li>
+      <li>${LANG==='tr' ? 'Negatif eleme yap (erken iki aday dışarı).' : 'Use negative elimination (drop two early).'}</li>
+      <li>${LANG==='tr' ? 'Günde 1–2 oturum idealdir.' : '1–2 sessions/day ideal.'}</li>
+    </ul>
+  </div>
+
+  <!-- Dream -->
   <div id="about-ruya" class="about-tab" style="display:none">
     <h3>🌙 ${LANG==='tr'?'Rüya Testi':'Dream Test'}</h3>
     <p>${LANG==='tr'
-      ? 'Yatmadan önce tema belirle; sabah ≤30 sn içinde rüyanı yaz; akşam “Eşleşti/Eşleşmedi”.'
-      : 'Set a theme before sleep; write the dream within 30s of waking; mark “Matched/Not” at night.'}</p>
+      ? 'Yatmadan önce bir tema belirle; sabah uyanır uyanmaz ≤30 sn rüyayı yaz; akşam “Eşleşti / Eşleşmedi” olarak işaretle.'
+      : 'Set a theme before sleep; upon waking write your dream within ≤30s; in the evening mark “Matched / Not”.'}</p>
     <p class="muted">${LANG==='tr'
-      ? 'Gerçek hayat değil; gece seçilen hedef ↔ sabah rüya notunun benzerliği ölçülür.'
-      : 'Not real-life outcomes; it’s theme ↔ dream-note similarity.'}</p>
-  </div>
+      ? 'Gerçek hayat sonuçları değil; gece seçilen hedef/tema ↔ sabah rüya notunun benzerliği ölçülür.'
+      : 'Not real-life outcomes; measures similarity between selected theme and morning note.'}</p>
 
-  <div id="about-rv" class="about-tab" style="display:none">
-    <h3>👁 Remote Viewing</h3>
-    <p>${LANG==='tr'
-      ? '4 görsel havuz; önce betimleme, sonra seçim.'
-      : 'Pool of 4 visuals; describe first, then choose.'}</p>
+    <p><b>${LANG==='tr' ? 'Pratik Akış' : 'Practical Flow'}</b></p>
+    <ol>
+      <li><b>${LANG==='tr' ? 'Gece — hedef belirle:' : 'Night — set target:'}</b>
+        <ul>
+          <li>${LANG==='tr' ? '“Hedef/Tema”ya tek cümle yaz (ör. kırmızı kapı, deniz kıyısı).' : 'Write a one-sentence target/theme.'}</li>
+          <li>${LANG==='tr' ? 'Kaydet.' : 'Save.'}</li>
+        </ul>
+      </li>
+      <li><b>${LANG==='tr' ? 'Sabah — rüya notu:' : 'Morning — dream note:'}</b>
+        <ul>
+          <li>${LANG==='tr' ? '2–3 kısa cümle: renkler, nesneler, duygular, mekân ipuçları.' : '2–3 short sentences: colors, objects, emotions, location cues.'}</li>
+          <li>${LANG==='tr' ? 'Örn: “Koyu kırmızı yüzey, dar geçit hissi, metalik ses.”' : 'e.g., “Dark red surface, narrow passage, metallic sound.”'}</li>
+        </ul>
+      </li>
+      <li><b>${LANG==='tr' ? 'Akşam — değerlendirme:' : 'Evening — evaluation:'}</b>
+        <ul>
+          <li>${LANG==='tr' ? 'Gerçekten benzeşiyor mu?' : 'Does it genuinely match?'}</li>
+          <li>${LANG==='tr' ? 'Eşleşti / Eşleşmedi; kararsızsan boş bırak.' : 'Mark Matched / Not; leave blank if unsure.'}</li>
+        </ul>
+      </li>
+    </ol>
+
+    <p><b>${LANG==='tr' ? 'Eşleşme Kriteri' : 'Match Criteria'}</b></p>
     <ul>
-      <li>${LANG==='tr'?'Not → seçim sırası önemli.':'Order matters: notes → choice.'}</li>
-      <li>${LANG==='tr'?'Şans %25.':'Chance 25%.'}</li>
-      <li>${LANG==='tr'?'Ana motiflere odaklan.':'Focus on main motifs.'}</li>
+      <li>${LANG==='tr' ? 'Ana motif yakalandıysa “Eşleşti”.' : 'Main motif captured ⇒ “Matched”.'}</li>
+      <li>${LANG==='tr' ? 'İkincil/zorlamaysa “Eşleşmedi”.' : 'Secondary/forced ⇒ “Not”.'}</li>
+      <li>${LANG==='tr' ? 'Kriteri sabit tut.' : 'Keep criterion consistent.'}</li>
+    </ul>
+
+    <p><b>${LANG==='tr' ? 'İpuçları' : 'Tips'}</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'Gecelik tek hedef seç.' : 'One target per night.'}</li>
+      <li>${LANG==='tr' ? 'Cümle yoksa 3–5 anahtar kelime yaz.' : 'If no sentences, write 3–5 keywords.'}</li>
+      <li>${LANG==='tr' ? 'Kararsızsan boş bırak; istatistiği bozma.' : 'If uncertain, leave blank.'}</li>
+      <li>${LANG==='tr' ? 'Oran yerine serideki trende bak.' : 'Look at the trend across the series.'}</li>
+    </ul>
+
+    <p><b>${LANG==='tr' ? 'Sık Durumlar' : 'Common Situations'}</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'Sabah notu kaçırırsan gün içinde yazma; o günü boş bırak.' : 'If you miss the morning note, don’t write it later; leave blank.'}</li>
+      <li>${LANG==='tr' ? 'Hedef çok genişse ölçmesi zor; ölçülebilir temalar kullan.' : 'Over-broad targets are hard to measure; pick measurable themes.'}</li>
+    </ul>
+
+    <p><b>${LANG==='tr' ? 'Uygulamada Yapacağın Tıklamalar' : 'Clicks in the App'}</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'Gece: Rüya Testi → Hedef/Tema → Kaydet' : 'Night: Dream Test → Target/Theme → Save'}</li>
+      <li>${LANG==='tr' ? 'Sabah: listeden bugünün satırı → Rüya Notu → Kaydet' : 'Morning: today’s row → Dream Note → Save'}</li>
+      <li>${LANG==='tr' ? 'Akşam: ilgili satır → Eşleşti / Eşleşmedi' : 'Evening: the row → Matched / Not'}</li>
     </ul>
   </div>
 
+  <!-- Remote Viewing -->
+  <div id="about-rv" class="about-tab" style="display:none">
+    <h3>👁 Remote Viewing</h3>
+    <p>${LANG==='tr'
+      ? 'Sistem dört görsel/tema seçer. Aşama 1 — Betimleme: görsele bakmadan 2–3 dk duyusal betimleme yaz. Aşama 2 — Seçim: en çok uyuşanı seç ve kaydet.'
+      : 'System selects four visuals/themes. Stage 1 — Description: write sensory notes for 2–3 min without viewing. Stage 2 — Choice: pick best match and save.'}</p>
+    <ul>
+      <li>${LANG==='tr' ? 'Sıra: önce notlar → sonra seçim.' : 'Order: notes first → choice later.'}</li>
+      <li>${LANG==='tr' ? 'Şans düzeyi 1/4 (p=0.25).' : 'Chance level 1/4 (p=0.25).'}</li>
+      <li>${LANG==='tr' ? 'Ana motiflere odaklan.' : 'Focus on main motifs.'}</li>
+    </ul>
+    <p><b>${LANG==='tr' ? 'Amaç' : 'Goal'}:</b>
+      ${LANG==='tr'
+        ? 'Uzak/gizli hedefi zihinsel imgelerle yakalama iddiasını oyunlaştırmak.'
+        : 'Gamify detecting a distant/hidden target via mental imagery.'}
+    </p>
+    <p><b>${LANG==='tr' ? 'Ne Ölçer?' : 'What Does It Measure?'}:</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'Oturum bazında doğru/yanlış.' : 'Per-session hit/miss.'}</li>
+      <li>${LANG==='tr' ? 'Seri isabet oranı (beklenti ≈%25).' : 'Series hit rate (expect ≈25%).'}</li>
+    </ul>
+    <p><b>${LANG==='tr' ? 'Hatalar' : 'Mistakes'}:</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'Önce görsellere bakmak → ankor/rasyonalizasyon.' : 'Viewing images first → anchoring/rationalization.'}</li>
+      <li>${LANG==='tr' ? 'Aşırı spesifik tek tahmine kilitlenmek.' : 'Locking to a single ultra-specific guess.'}</li>
+      <li>${LANG==='tr' ? 'Notu çok kısa tutmak.' : 'Keeping notes too brief.'}</li>
+    </ul>
+    <p><b>${LANG==='tr' ? 'İpuçları' : 'Tips'}:</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'Duyusal kategorilerle yaz.' : 'Use sensory categories.'}</li>
+      <li>${LANG==='tr' ? 'Önce negatif eleme yap.' : 'Do negative elimination first.'}</li>
+      <li>${LANG==='tr' ? 'Notu yüksek sesle okumak zihni netleştirir.' : 'Reading notes aloud can clarify motifs.'}</li>
+    </ul>
+  </div>
+
+  <!-- Premonition -->
   <div id="about-onsezi" class="about-tab" style="display:none">
     <h3>⚡ ${LANG==='tr'?'Önsezi Günlüğü':'Premonition Log'}</h3>
     <p>${LANG==='tr'
-      ? 'Ani hisleri kısa not al; sonra Oldu/Olmadı işaretle.'
-      : 'Log quick hunches; later mark Happened/Didn’t.'}</p>
+      ? 'Ani his geldiğinde kısa not bırak; akşam/ertesi gün “Oldu / Olmadı” işaretle.'
+      : 'When a hunch arises, jot a brief note; mark “Happened / Didn’t” later.'}</p>
+
+    <p><b>${LANG==='tr' ? 'Nasıl Kullanılır?' : 'How To Use'}</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'Bir cümlelik not (ör. “Bugün X arayacak”).' : 'One-sentence notes (e.g., “X will call today”).'}</li>
+      <li>${LANG==='tr' ? 'Akşam/ertesi gün sonucu işaretle.' : 'Mark the outcome that evening/next day.'}</li>
+      <li>${LANG==='tr' ? 'Tarih + bağlam ekle.' : 'Add date + context.'}</li>
+      <li>${LANG==='tr' ? 'Opsiyonel: kategori etiketi, güven puanı.' : 'Optional: category tag, confidence.'}</li>
+    </ul>
+
+    <p><b>${LANG==='tr' ? 'Amaç' : 'Goal'}</b></p>
+    <p>${LANG==='tr'
+      ? 'Sezgileri sistematik kayda almak; “doğru olanlar akılda kalır” yanlılığını dengelemek.'
+      : 'Systematically record intuitions and counter the “only hits stick” bias.'}</p>
+
+    <p><b>${LANG==='tr' ? 'Ne Ölçer?' : 'Measures'}</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'Toplam not ve Oldu/Olmadı oranı.' : 'Total notes and Happened/Didn’t ratio.'}</li>
+      <li>${LANG==='tr' ? 'Kategori bazlı zaman içi görünüm.' : 'Category-level view over time.'}</li>
+    </ul>
+
+    <p><b>${LANG==='tr' ? 'Hatalar' : 'Mistakes'}</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'Sadece “doğruları” kaydetmek.' : 'Recording only hits.'}</li>
+      <li>${LANG==='tr' ? 'Aşırı genel notlar (“bir şey olacak”).' : 'Overly vague notes (“something will happen”).'}</li>
+      <li>${LANG==='tr' ? 'Günün sonunda topluca yazmak (hatırlama yanlılığı).' : 'Writing later at day’s end (recall bias).'}</li>
+    </ul>
+
+    <p><b>${LANG==='tr' ? 'İpuçları' : 'Tips'}</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'Her notu tarih+bağlamla yaz.' : 'Write each note with date+context.'}</li>
+      <li>${LANG==='tr' ? 'Haftalık/aylık tabloları incele.' : 'Review weekly/monthly patterns.'}</li>
+      <li>${LANG==='tr' ? 'Notu anında gir; “sonradan uydurma” hissini önler.' : 'Enter immediately; avoids “retro-fit”.'}</li>
+    </ul>
   </div>
 
+  <!-- RNG Seed -->
   <div id="about-seed" class="about-tab" style="display:none">
     <h3>🎲 RNG Seed</h3>
     <p>${LANG==='tr'
       ? '<b>Nedir:</b> Rastgele üretecin başlangıç noktası. Aynı seed → aynı dizilim.'
-      : '<b>What:</b> Start point of RNG. Same seed → same sequence.'}</p>
+      : '<b>What:</b> Start point of the RNG. Same seed → same sequence.'}</p>
     <ul>
-      <li>${LANG==='tr'?'Büyüklük zorluğu değiştirmez; sadece dizilimi değiştirir.' :'Magnitude doesn’t change difficulty; only the sequence.'}</li>
-      <li>${LANG==='tr'?'Karşılaştırma için seed sabitle.':'Fix seed to compare runs.'}</li>
-      <li>${LANG==='tr'?'Her tur farklı istersen rastgeleleştir.':'Randomize for fresh runs.'}</li>
+      <li>${LANG==='tr' ? 'Büyüklük zorluğu değiştirmez; sadece dizilimi değiştirir.' : 'Magnitude doesn’t change difficulty; only the sequence.'}</li>
+      <li>${LANG==='tr' ? 'Karşılaştırma için seed sabitle.' : 'Fix seed for comparisons.'}</li>
+      <li>${LANG==='tr' ? 'Her sefer farklı istersen rastgeleleştir.' : 'Randomize for fresh runs.'}</li>
+    </ul>
+
+    <p><b>${LANG==='tr' ? 'RNG Seed Nedir?' : 'What Is an RNG Seed?'}</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'RNG = rastgele sayı üretecinin başlangıcı.' : 'RNG seed = generator’s starting point.'}</li>
+      <li>${LANG==='tr' ? 'Bilgisayarda rastgelelik deterministiktir.' : 'Computer randomness is deterministic.'}</li>
+      <li>${LANG==='tr' ? 'Aynı seed → aynı sıra; farklı seed → farklı sıra.' : 'Same seed → same order; different seed → different order.'}</li>
+    </ul>
+
+    <p><b>${LANG==='tr' ? 'Amacı' : 'Why Use It'}</b></p>
+    <ul>
+      <li><b>${LANG==='tr' ? 'Şeffaflık' : 'Transparency'}</b></li>
+      <li><b>${LANG==='tr' ? 'Tekrar edilebilirlik' : 'Repeatability'}</b></li>
+      <li><b>${LANG==='tr' ? 'Deneysel güven' : 'Experimental confidence'}</b></li>
+    </ul>
+
+    <p><b>${LANG==='tr' ? 'Nasıl Ayarlanır?' : 'How To Set'}</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'Ayarlar → RNG Seed kısmına sayı gir.' : 'Settings → RNG Seed: enter a number.'}</li>
+      <li>${LANG==='tr' ? '“Rastgeleleştir” yeni seed üretir.' : '“Randomize” generates a new seed.'}</li>
+      <li>${LANG==='tr' ? 'Tüm testler aynı seed ile çalışır.' : 'All tests run using the same seed.'}</li>
+    </ul>
+
+    <p><b>${LANG==='tr' ? 'Artırınca/Azaltınca' : 'Increase/Decrease'}</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'Seed sadece başlangıçtır; zorluk değiştirmez.' : 'Seed is just a start; doesn’t change difficulty.'}</li>
+      <li>${LANG==='tr' ? 'Seed=1 ve Seed=9999 aynı derecede rastgele.' : 'Seed=1 and Seed=9999 are equally random.'}</li>
+      <li>${LANG==='tr' ? '“Yüksek seed zor” diye bir şey yok.' : 'No such thing as “higher seed is harder”.'}</li>
+    </ul>
+
+    <p><b>${LANG==='tr' ? 'Kullanım Senaryoları' : 'Use Cases'}</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'Kendi kendine tekrar: Seed=1234 ile bugün/gelecek hafta aynı sıralama.' : 'Self-replication: Seed=1234 today/next week → same order.'}</li>
+      <li>${LANG==='tr' ? 'Arkadaşla karşılaştırma: ikiniz de aynı seed.' : 'Peer comparison: both use same seed.'}</li>
+      <li>${LANG==='tr' ? 'Rapor PNG’de seed görünür → yeniden üretilebilir.' : 'Report PNG shows the seed → reproducible.'}</li>
+    </ul>
+
+    <p><b>${LANG==='tr' ? 'İpuçları' : 'Tips'}</b></p>
+    <ul>
+      <li>${LANG==='tr' ? 'Karşılaştırma için seed sabitle.' : 'Fix seed for comparisons.'}</li>
+      <li>${LANG==='tr' ? '“Her sefer farklı” istersen rastgeleleştir.' : 'Randomize for variety.'}</li>
+      <li>${LANG==='tr' ? 'Tek bir seed ile aşırı tekrar yapma; farklı seed’ler dene.' : 'Don’t over-repeat one seed; vary seeds.'}</li>
     </ul>
   </div>
   `;
 }
+
 function aboutTab(id){
   document.querySelectorAll('.about-tab').forEach(el=>el.style.display='none');
   const target=document.getElementById('about-'+id); if(target) target.style.display='block';
