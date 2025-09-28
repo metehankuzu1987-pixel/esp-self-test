@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tabirly | ESP Self‑Test (Eğlence Amaçlı)</title>
-  <meta name="description" content="Zener, Ganzfeld, Rüya, Önsezi ve Remote Viewing (Uzaktan Görme). RNG seed, grafikler, rozetler, profil ve paylaşılabilir rapor. Tek dosya, GitHub Pages uyumlu." />
+  <meta name="description" content="Zener, Ganzfeld, Rüya, Önsezi ve Remote Viewing. RNG seed, grafikler, rozetler, profil ve paylaşılabilir rapor. Tek dosya, GitHub Pages uyumlu." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2306b6d4'/%3E%3Cpath d='M14 32c8-12 28-12 36 0-8 12-28 12-36 0z' fill='%23fff'/%3E%3Ccircle cx='32' cy='32' r='6' fill='%237c3aed'/%3E%3C/svg%3E" />
   <style>
     :root{
@@ -43,8 +43,6 @@
     .btn:disabled{opacity:.5; cursor:not-allowed}
     input[type="number"], input[type="text"], textarea, select{width:100%; background:#0d131c; color:var(--text); border:1px solid rgba(255,255,255,.1); border-radius:10px; padding:10px}
     textarea{min-height:110px; resize:vertical}
-
-    .pill{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); font-size:12px}
 
     .mono{font-family:var(--mono)}
     .section-title{font-size:20px; font-weight:800; margin:4px 0 10px}
@@ -197,8 +195,6 @@ function fmtDate(ts){ const d=new Date(ts); return d.toLocaleString(LANG==='tr'?
 function uid(){ return Math.random().toString(36).slice(2) }
 function download(filename, text){ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([text],{type:'text/plain'})); a.download=filename; a.click(); URL.revokeObjectURL(a.href) }
 function percent(x){ return (x*100).toFixed(1)+'%' }
-
-// Simple SVG sparkbars
 function sparkbar(values){ const w=160,h=32,max=Math.max(1,...values); const step=w/values.length; let rects=''; values.forEach((v,i)=>{ const bh = Math.max(1, h*(v/max)); const x=i*step+2, y=h-bh; rects += `<rect x="${x}" y="${y}" width="${Math.max(1,step-4)}" height="${bh}" rx="2" fill="url(#g)"/>` }); return `
 <svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="var(--accent)"/><stop offset="100%" stop-color="var(--accent2)"/></linearGradient></defs>${rects}</svg>` }
 
@@ -279,9 +275,13 @@ const ZENER = [
   {k:'waves', label:'Dalga 🌊', icon:'🌊'}
 ];
 function zener(){
-  const state = store.get('zener-state', null);
-  if(!state){ const deck = [...Array(25)].map((_,i)=> Math.floor(i/5)); for(let i=deck.length-1; i>0; i--){ const j=Math.floor(srand()*(i+1)); [deck[i],deck[j]]=[deck[j],deck[i]] } store.set('zener-state', { id: uid(), ts: Date.now(), step:0, deck, guesses:[], hits:0 }); }
-  const s = store.get('zener-state');
+  let s = store.get('zener-state', null);
+  if(!s){
+    const deck = [...Array(25)].map((_,i)=> Math.floor(i/5));
+    for(let i=deck.length-1; i>0; i--){ const j=Math.floor(srand()*(i+1)); [deck[i],deck[j]]=[deck[j],deck[i]] }
+    s = { id: uid(), ts: Date.now(), step:0, deck, guesses:[], hits:0 };
+    store.set('zener-state', s);
+  }
   const done = s.step>=s.deck.length; const n = s.deck.length;
   return `
   <div class="section-title">Zener Kart Testi <span class="sub">(25 tur)</span></div>
@@ -303,7 +303,7 @@ function renderZenerHistory(){ const arr = store.get('zener-sessions', []); if(a
 
 // ========== Mini-Ganzfeld ==========
 const GF_POOL = [ 'Kırmızı kapı', 'Fok balığı', 'Savaş uçağı', 'Ayçiçeği tarlası', 'Palyaço balığı', 'Karlı dağ', 'Gitar', 'Şimşek' ];
-function ganzfeld(){ const s = store.get('ganz-state', null) || { id:uid(), phase:'setup', poolSize:4, impressions:'', ts:Date.now() }; function save(){ store.set('ganz-state', s) } function ui(){ if(s.phase==='setup'){ const pool = []; const src = GF_POOL.slice(); while(pool.length < s.poolSize){ const x = spick(src); if(!pool.includes(x)) pool.push(x) } s.pool = pool; s.target = Math.floor(srand()*pool.length); s.phase='impress'; save(); } if(s.phase==='impress'){ return `<div class="section-title">Mini‑Ganzfeld</div><div class="sub">Aşağıdaki 4 hedeften biri gizlice seçildi. 2–5 dakika aklına gelenleri yaz, sonra seçim yap.</div><div class="card" style="margin-top:10px"><b>Hedef Havuzu (4)</b><ul class="list">${s.pool.map(x=>`<li>${x}</li>`).join('')}</ul></div><label class="muted" style="display:block; margin:10px 0 6px">İzlenimler</label><textarea oninput="(function(v){ const s=store.get('ganz-state'); s.impressions=v; store.set('ganz-state',s) })(this.value)">${s.impressions||''}</textarea><div class="row" style="margin-top:10px"><button class="btn" onclick="(function(){ const s=store.get('ganz-state'); s.phase='choose'; store.set('ganz-state',s); go('ganzfeld') })()">Seçime Geç</button><button class="btn secondary" onclick="ganzReset(true)">Oturumu Sıfırla</button></div>` } if(s.phase==='choose'){ return `<div class="section-title">Seçim</div><div class="sub">Hangi hedefe en çok benziyor?</div><div class="row" style="margin-top:10px">${s.pool.map((x,i)=>`<button class="btn secondary" onclick="ganzChoose(${i})">${i+1}. ${x}</button>`).join('')}</div><div class="foot">RNG seed: <span class="mono">${store.get('rng-seed')}</span></div>` } if(s.phase==='done'){ const ok = s.choice===s.target; const entry = `<div class="card" style="margin-top:10px"><div class="inline-stat"><span class="chip">Seçimin: <b>${s.pool[s.choice]}</b></span><span class="chip">Hedef: <b>${s.pool[s.target]}</b></span><span class="chip">Durum: <b>${ok? 'Doğru':'Yanlış'}</b></span></div><div style="margin-top:8px"><b>İzlenimler:</b><div class="muted">${(s.impressions||'—').replace(/[<>]/g,'')}</div></div></div>`; return `<div class="section-title">Sonuç</div>${entry}<div class="row" style="margin-top:12px"><button class="btn" onclick="ganzSave()">Kaydet</button><button class="btn secondary" onclick="ganzReset()">Yeni Oturum</button></div>${renderGanzHistory()}` } } return ui(); }
+function ganzfeld(){ let s = store.get('ganz-state', null); if(!s){ const pool = []; const src = GF_POOL.slice(); while(pool.length < 4){ const x = spick(src); if(!pool.includes(x)) pool.push(x) } s = { id:uid(), phase:'impress', pool, target:Math.floor(srand()*4), impressions:'', ts:Date.now() }; store.set('ganz-state', s) } if(s.phase==='impress'){ return `<div class="section-title">Mini‑Ganzfeld</div><div class="sub">Aşağıdaki 4 hedeften biri gizlice seçildi. 2–5 dakika aklına gelenleri yaz, sonra seçim yap.</div><div class="card" style="margin-top:10px"><b>Hedef Havuzu (4)</b><ul class="list">${s.pool.map(x=>`<li>${x}</li>`).join('')}</ul></div><label class="muted" style="display:block; margin:10px 0 6px">İzlenimler</label><textarea oninput="(function(v){ const s=store.get('ganz-state'); s.impressions=v; store.set('ganz-state',s) })(this.value)">${s.impressions||''}</textarea><div class="row" style="margin-top:10px"><button class="btn" onclick="(function(){ const s=store.get('ganz-state'); s.phase='choose'; store.set('ganz-state',s); go('ganzfeld') })()">Seçime Geç</button><button class="btn secondary" onclick="ganzReset(true)">Oturumu Sıfırla</button></div>` } if(s.phase==='choose'){ return `<div class="section-title">Seçim</div><div class="sub">Hangi hedefe en çok benziyor?</div><div class="row" style="margin-top:10px">${s.pool.map((x,i)=>`<button class="btn secondary" onclick="ganzChoose(${i})">${i+1}. ${x}</button>`).join('')}</div><div class="foot">RNG seed: <span class="mono">${store.get('rng-seed')}</span></div>` } if(s.phase==='done'){ const ok = s.choice===s.target; const entry = `<div class="card" style="margin-top:10px"><div class="inline-stat"><span class="chip">Seçimin: <b>${s.pool[s.choice]}</b></span><span class="chip">Hedef: <b>${s.pool[s.target]}</b></span><span class="chip">Durum: <b>${ok? 'Doğru':'Yanlış'}</b></span></div><div style="margin-top:8px"><b>İzlenimler:</b><div class="muted">${(s.impressions||'—').replace(/[<>]/g,'')}</div></div></div>`; return `<div class="section-title">Sonuç</div>${entry}<div class="row" style="margin-top:12px"><button class="btn" onclick="ganzSave()">Kaydet</button><button class="btn secondary" onclick="ganzReset()">Yeni Oturum</button></div>${renderGanzHistory()}` } }
 function ganzChoose(i){ const s=store.get('ganz-state'); s.choice=i; s.phase='done'; store.set('ganz-state',s); go('ganzfeld') }
 function ganzSave(){ const s=store.get('ganz-state'); if(!s||s.phase!=='done') return; const arr=store.get('ganzfeld-sessions', []); const entry={id:s.id, ts:s.ts, pool:s.pool, target:s.target, choice:s.choice, impressions:s.impressions, correct: s.choice===s.target?1:0, n:1}; arr.push(entry); store.set('ganzfeld-sessions', arr); store.del('ganz-state'); awardBadges(); alert('Kaydedildi.'); go('ganzfeld') }
 function ganzReset(confirmAsk){ if(confirmAsk && !confirm('Oturum sıfırlansın mı?')) return; store.del('ganz-state'); go('ganzfeld') }
@@ -324,7 +324,7 @@ function premSet(id, val){ const arr=store.get('premonitions', []); const i=arr.
 function premDel(id){ const arr=store.get('premonitions', []).filter(x=>x.id!==id); store.set('premonitions', arr); go('premonitions') }
 function renderPremList(items){ if(items.length===0) return `<div class="card" style="margin-top:14px"><div class="muted">Henüz kayıt yok.</div></div>`; const yes = items.filter(x=>x.confirmed===true).length, no = items.filter(x=>x.confirmed===false).length; const rows = items.slice().reverse().map(x=>`<tr><td class="mono">${fmtDate(x.ts)}</td><td>${x.note}</td><td>${x.confirmed===true? '<span class="good">Oldu</span>': x.confirmed===false? '<span class="danger">Olmadı</span>': '<span class="muted">—</span>'}</td><td><button class="btn secondary" onclick="premSet('${x.id}', true)">Oldu</button><button class="btn secondary" onclick="premSet('${x.id}', false)">Olmadı</button><button class="btn secondary" onclick="premDel('${x.id}')">Sil</button></td></tr>`).join(''); const rate = (yes+no)? percent(yes/(yes+no)) : '–'; return `<div class="card" style="margin-top:14px"><div class="kv"><div>İsabet Oranı</div><div><b>${yes}</b>/<b>${yes+no}</b> <span class="muted">(${rate})</span></div></div><div style="overflow:auto; margin-top:8px"><table style="width:100%; border-collapse:collapse"><thead><tr><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Zaman</th><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Not</th><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Durum</th><th style="text-align:left; padding:6px; border-bottom:1px solid rgba(255,255,255,.1)">Eylem</th></tr></thead><tbody>${rows}</tbody></table></div></div>` }
 
-// ========== Remote Viewing (inline SVG target pool) ==========
+// ========== Remote Viewing ==========
 const RV_POOL = [
   {k:'dağ', svg:`<svg width='96' height='64' viewBox='0 0 96 64' xmlns='http://www.w3.org/2000/svg'><rect width='96' height='64' rx='8' fill='#0d131c'/><path d='M8 52 32 20l10 14 10-14 28 32' fill='none' stroke='white' stroke-width='3'/></svg>`},
   {k:'fener', svg:`<svg width='96' height='64' xmlns='http://www.w3.org/2000/svg'><rect width='96' height='64' rx='8' fill='#0d131c'/><rect x='42' y='20' width='12' height='24' fill='white'/><polygon points='48,16 56,20 40,20' fill='white'/><polygon points='48,28 96,18 96,46' fill='#ffd166' opacity='0.6'/></svg>`},
@@ -333,38 +333,7 @@ const RV_POOL = [
   {k:'göz', svg:`<svg width='96' height='64' xmlns='http://www.w3.org/2000/svg'><rect width='96' height='64' rx='8' fill='#0d131c'/><path d='M8 32c12-14 68-14 80 0-12 14-68 14-80 0' fill='none' stroke='white' stroke-width='3'/><circle cx='48' cy='32' r='8' fill='#7c3aed'/></svg>`},
   {k:'gemi', svg:`<svg width='96' height='64' xmlns='http://www.w3.org/2000/svg'><rect width='96' height='64' rx='8' fill='#0d131c'/><polygon points='20,38 76,38 70,46 26,46' fill='white'/><path d='M14 50h68' stroke='#06b6d4' stroke-width='3'/></svg>`}
 ];
-function remote(){
-  const s = store.get('rv-state', null) || { id:uid(), phase:'setup', pool:[], target:0, notes:'', ts:Date.now() };
-  function save(){ store.set('rv-state', s) }
-  if(s.phase==='setup'){
-    // Build pool of 4 unique targets from RV_POOL
-    const pool=[]; while(pool.length<4){ const x = spick(RV_POOL); if(!pool.includes(x)) pool.push(x) } s.pool=pool; s.target=Math.floor(srand()*pool.length); s.phase='view'; save();
-  }
-  if(s.phase==='view'){
-    return `
-    <div class="section-title">Remote Viewing</div>
-    <div class="sub">Aşağıdaki 4 hedeften biri gizlice seçildi. 3–5 dk serbest betimleme yaz, çizim yaparsan tarife ekle (metin).</div>
-    <div class="card" style="margin-top:10px"><b>Hedef Havuzu (4)</b><div class="rv-grid" style="margin-top:8px">${s.pool.map(x=>`<div class='rv-card'><div class='rv-thumb'>${x.svg}</div></div>`).join('')}</div></div>
-    <label class="muted" style="display:block; margin:10px 0 6px">Betimleme / İpuçları</label>
-    <textarea oninput="(function(v){ const s=store.get('rv-state'); s.notes=v; store.set('rv-state',s) })(this.value)">${s.notes||''}</textarea>
-    <div class="row" style="margin-top:10px">
-      <button class="btn" onclick="(function(){ const s=store.get('rv-state'); s.phase='choose'; store.set('rv-state',s); go('remote') })()">Seçime Geç</button>
-      <button class="btn secondary" onclick="rvReset(true)">Oturumu Sıfırla</button>
-    </div>`
-  }
-  if(s.phase==='choose'){
-    return `
-    <div class="section-title">Seçim</div>
-    <div class="sub">Hangi hedefe en çok benziyor?</div>
-    <div class="row" style="margin-top:10px">${s.pool.map((x,i)=>`<button class="btn secondary" onclick="rvChoose(${i})">${i+1}</button>`).join('')}</div>
-    <div class="foot">RNG seed: <span class="mono">${store.get('rng-seed')}</span></div>`
-  }
-  if(s.phase==='done'){
-    const ok = s.choice===s.target;
-    const entry = `<div class="card" style="margin-top:10px"><div class="inline-stat"><span class="chip">Seçimin: <b>${s.choice+1}</b></span><span class="chip">Hedef: <b>${s.target+1}</b></span><span class="chip">Durum: <b>${ok? 'Doğru':'Yanlış'}</b></span></div><div class="row" style="margin-top:10px">${s.pool.map((x,i)=>`<div class='rv-thumb' title='${i+1}'>${x.svg}</div>`).join('')}</div><div style="margin-top:8px"><b>Betimleme:</b><div class="muted">${(s.notes||'—').replace(/[<>]/g,'')}</div></div></div>`;
-    return `<div class="section-title">Remote Viewing Sonuç</div>${entry}<div class="row" style="margin-top:12px"><button class="btn" onclick="rvSave()">Kaydet</button><button class="btn secondary" onclick="rvReset()">Yeni Oturum</button></div>${renderRVHistory()}`
-  }
-}
+function remote(){ let s = store.get('rv-state', null); if(!s){ const pool=[]; while(pool.length<4){ const x = spick(RV_POOL); if(!pool.includes(x)) pool.push(x) } s={ id:uid(), phase:'view', pool, target:Math.floor(srand()*4), notes:'', ts:Date.now() }; store.set('rv-state', s) } if(s.phase==='view'){ return `<div class="section-title">Remote Viewing</div><div class="sub">Aşağıdaki 4 hedeften biri gizlice seçildi. 3–5 dk serbest betimleme yaz, sonra seçim yap.</div><div class="card" style="margin-top:10px"><b>Hedef Havuzu (4)</b><div class="rv-grid" style="margin-top:8px">${s.pool.map(x=>`<div class='rv-card'><div class='rv-thumb'>${x.svg}</div></div>`).join('')}</div></div><label class="muted" style="display:block; margin:10px 0 6px">Betimleme / İpuçları</label><textarea oninput="(function(v){ const s=store.get('rv-state'); s.notes=v; store.set('rv-state',s) })(this.value)">${s.notes||''}</textarea><div class="row" style="margin-top:10px"><button class="btn" onclick="(function(){ const s=store.get('rv-state'); s.phase='choose'; store.set('rv-state',s); go('remote') })()">Seçime Geç</button><button class="btn secondary" onclick="rvReset(true)">Oturumu Sıfırla</button></div>` } if(s.phase==='choose'){ return `<div class="section-title">Seçim</div><div class="sub">Hangi hedefe en çok benziyor?</div><div class="row" style="margin-top:10px">${s.pool.map((x,i)=>`<button class="btn secondary" onclick="rvChoose(${i})">${i+1}</button>`).join('')}</div><div class="foot">RNG seed: <span class="mono">${store.get('rng-seed')}</span></div>` } if(s.phase==='done'){ const ok = s.choice===s.target; const entry = `<div class="card" style="margin-top:10px"><div class="inline-stat"><span class="chip">Seçimin: <b>${s.choice+1}</b></span><span class="chip">Hedef: <b>${s.target+1}</b></span><span class="chip">Durum: <b>${ok? 'Doğru':'Yanlış'}</b></span></div><div class="row" style="margin-top:10px">${s.pool.map((x,i)=>`<div class='rv-thumb' title='${i+1}'>${x.svg}</div>`).join('')}</div><div style="margin-top:8px"><b>Betimleme:</b><div class="muted">${(s.notes||'—').replace(/[<>]/g,'')}</div></div></div>`; return `<div class="section-title">Remote Viewing Sonuç</div>${entry}<div class="row" style="margin-top:12px"><button class="btn" onclick="rvSave()">Kaydet</button><button class="btn secondary" onclick="rvReset()">Yeni Oturum</button></div>${renderRVHistory()}` } }
 function rvChoose(i){ const s=store.get('rv-state'); s.choice=i; s.phase='done'; store.set('rv-state',s); go('remote') }
 function rvSave(){ const s=store.get('rv-state'); if(!s||s.phase!=='done') return; const arr=store.get('rv-sessions', []); const entry={id:s.id, ts:s.ts, pool:s.pool.map(p=>p.k), target:s.target, choice:s.choice, notes:s.notes, correct: s.choice===s.target?1:0}; arr.push(entry); store.set('rv-sessions', arr); store.del('rv-state'); awardBadges(); alert('Kaydedildi.'); go('remote') }
 function rvReset(confirmAsk){ if(confirmAsk && !confirm('Oturum sıfırlansın mı?')) return; store.del('rv-state'); go('remote') }
@@ -380,47 +349,11 @@ function applyTheme(){ const c1=document.getElementById('c1').value, c2=document
 
 // ========== Export / Import / Share Image ==========
 function exportJSON(){ const data = {}; ['zener-sessions','ganzfeld-sessions','dream-entries','premonitions','rng-seed','theme','profile','rv-sessions'].forEach(k=> data[k]=store.get(k, []) ); download('tabirly-esp-data.json', JSON.stringify({version:3, exportedAt:Date.now(), lang:LANG, data}, null, 2)); }
-function exportCSV(){ function toCSV(rows){ return rows.map(r=> r.map(x=> '"'+String(x).replace(/"/g,'""')+'"').join(',')).join('
-') } const z = store.get('zener-sessions', []).map(s=> [new Date(s.ts).toISOString(), s.hits, s.n, (s.hits/s.n).toFixed(3)]); const g = store.get('ganzfeld-sessions', []).map(s=> [new Date(s.ts).toISOString(), s.pool[s.target], s.pool[s.choice], s.correct]); const d = store.get('dream-entries', []).map(x=> [x.date, x.goal, (x.note||'').replace(/
-/g,' '), x.matched]); const p = store.get('premonitions', []).map(x=> [new Date(x.ts).toISOString(), x.note, x.confirmed]); const rv = store.get('rv-sessions', []).map(s=> [new Date(s.ts).toISOString(), s.pool[s.target], s.pool[s.choice], s.correct]); const parts = [ ['# Zener: ts,hits,n,ratio'], ...z, [''], ['# Ganzfeld: ts,target,choice,correct(1/0)'], ...g, [''], ['# Remote: ts,target,choice,correct(1/0)'], ...rv, [''], ['# Dreams: date,goal,note,matched(true/false/null)'], ...d, [''], ['# Premonitions: ts,note,confirmed(true/false/null)'], ...p ]; download('tabirly-esp-data.csv', toCSV(parts)); }
+function exportCSV(){ function toCSV(rows){ return rows.map(r=> r.map(x=> '"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\n') } const z = store.get('zener-sessions', []).map(s=> [new Date(s.ts).toISOString(), s.hits, s.n, (s.hits/s.n).toFixed(3)]); const g = store.get('ganzfeld-sessions', []).map(s=> [new Date(s.ts).toISOString(), s.pool[s.target], s.pool[s.choice], s.correct]); const d = store.get('dream-entries', []).map(x=> [x.date, x.goal, (x.note||'').replace(/\n/g,' '), x.matched]); const p = store.get('premonitions', []).map(x=> [new Date(x.ts).toISOString(), x.note, x.confirmed]); const rv = store.get('rv-sessions', []).map(s=> [new Date(s.ts).toISOString(), s.pool[s.target], s.pool[s.choice], s.correct]); const parts = [ ['# Zener: ts,hits,n,ratio'], ...z, [''], ['# Ganzfeld: ts,target,choice,correct(1/0)'], ...g, [''], ['# Remote: ts,target,choice,correct(1/0)'], ...rv, [''], ['# Dreams: date,goal,note,matched(true/false/null)'], ...d, [''], ['# Premonitions: ts,note,confirmed(true/false/null)'], ...p ]; download('tabirly-esp-data.csv', toCSV(parts)); }
 function importJSON(ev){ const file = ev.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = () => { try{ const obj = JSON.parse(reader.result); if(!obj || !obj.data) throw new Error('Geçersiz JSON'); const d = obj.data; ['zener-sessions','ganzfeld-sessions','dream-entries','premonitions','rng-seed','theme','profile','rv-sessions'].forEach(k=>{ if(d[k]!==undefined){ store.set(k, d[k]); if(k==='rng-seed') setSeed(d[k]) } }); const th = d['theme']; if(th){ document.documentElement.style.setProperty('--brand', th.c1); document.documentElement.style.setProperty('--brand2', th.c2) } alert('Veriler yüklendi.'); location.reload(); }catch(e){ alert('Yükleme hatası: '+e.message) } }; reader.readAsText(file); }
+function shareImage(){ const z = store.get('zener-sessions', []); const g = store.get('ganzfeld-sessions', []); const rv = store.get('rv-sessions', []); const d = store.get('dream-entries', []); const p = store.get('premonitions', []); const zHits = z.reduce((a,s)=>a+s.hits,0), zN = z.reduce((a,s)=>a+s.n,0); const gHits = g.reduce((a,s)=>a+s.correct,0), gN = g.reduce((a,s)=>a+s.n,0); const rvHits = rv.reduce((a,s)=>a+s.correct,0); const dMatch = d.filter(x=>x.matched===true).length; const pHit = p.filter(x=>x.confirmed===true).length; const name = (getProfile().name||'Tabirly User'); const seed = store.get('rng-seed'); const w=1000,h=560; const c=document.createElement('canvas'); c.width=w; c.height=h; const ctx=c.getContext('2d'); const ggrad=ctx.createLinearGradient(0,0,w,h); ggrad.addColorStop(0,'#0b0e13'); ggrad.addColorStop(1,'#0a0d12'); ctx.fillStyle=ggrad; ctx.fillRect(0,0,w,h); ctx.fillStyle='#06b6d4'; ctx.font='700 28px Inter, system-ui, sans-serif'; ctx.fillText('Tabirly • ESP Report', 24, 44); ctx.fillStyle='#8aa0b3'; ctx.font='16px Inter, system-ui, sans-serif'; ctx.fillText(new Date().toLocaleString(), 24, 68); ctx.fillStyle='#e6eef5'; ctx.font='20px Inter, system-ui, sans-serif'; ctx.fillText(''+name, 24, 108); ctx.fillStyle='#8aa0b3'; ctx.font='14px Inter, system-ui, sans-serif'; ctx.fillText('Seed: '+seed, 24, 132); function card(x,y,wc,hc,title,lines){ ctx.fillStyle='rgba(255,255,255,0.04)'; ctx.strokeStyle='rgba(255,255,255,0.12)'; ctx.lineWidth=1; roundRect(ctx,x,y,wc,hc,16,true,true); ctx.fillStyle='#e6eef5'; ctx.font='700 18px Inter, system-ui, sans-serif'; ctx.fillText(title,x+16,y+28); ctx.fillStyle='#8aa0b3'; ctx.font='16px Inter, system-ui, sans-serif'; lines.forEach((ln,i)=> ctx.fillText(ln,x+16,y+60+i*22) ) } function roundRect(ctx,x,y,w,h,r,fill,stroke){ if (typeof r === 'number') { r = {tl:r, tr:r, br:r, bl:r}; } ctx.beginPath(); ctx.moveTo(x+r.tl, y); ctx.lineTo(x+w-r.tr, y); ctx.quadraticCurveTo(x+w, y, x+w, y+r.tr); ctx.lineTo(x+w, y+h-r.br); ctx.quadraticCurveTo(x+w, y+h, x+w-r.br, y+h); ctx.lineTo(x+r.bl, y+h); ctx.quadraticCurveTo(x, y+h, x, y+h-r.bl); ctx.lineTo(x, y+r.tl); ctx.quadraticCurveTo(x, y, x+r.tl, y); ctx.closePath(); if(fill) ctx.fill(); if(stroke) ctx.stroke(); } card(24,160,300,140,'Zener', [ `Toplam: ${zHits}/${zN}`, `Oran: ${zN? (zHits/zN*100).toFixed(1)+'%':'—'}` ]); card(348,160,300,140,'Ganzfeld', [ `Toplam: ${gHits}/${gN}`, `Oran: ${gN? (gHits/gN*100).toFixed(1)+'%':'—'}` ]); card(672,160,300,140,'Remote', [ `Toplam: ${rvHits}/${rv.length}`, `—` ]); card(24,320,300,140,'Rüya', [ `Eşleşme: ${dMatch}/${d.length}` ]); card(348,320,300,140,'Önsezi', [ `İsabet: ${pHit}/${p.length}` ]); ctx.fillStyle='#8aa0b3'; ctx.font='12px Inter, system-ui, sans-serif'; ctx.fillText('Eğlence amaçlıdır. © Tabirly', 24, h-20); const url = c.toDataURL('image/png'); const a=document.createElement('a'); a.href=url; a.download='tabirly-esp-report.png'; a.click(); }
 
-function shareImage(){
-  // Basit paylaşılabilir PNG raporu (canvas)
-  const z = store.get('zener-sessions', []); const g = store.get('ganzfeld-sessions', []); const rv = store.get('rv-sessions', []); const d = store.get('dream-entries', []); const p = store.get('premonitions', []);
-  const zHits = z.reduce((a,s)=>a+s.hits,0), zN = z.reduce((a,s)=>a+s.n,0);
-  const gHits = g.reduce((a,s)=>a+s.correct,0), gN = g.reduce((a,s)=>a+s.n,0);
-  const rvHits = rv.reduce((a,s)=>a+s.correct,0);
-  const dMatch = d.filter(x=>x.matched===true).length;
-  const pHit = p.filter(x=>x.confirmed===true).length;
-  const name = (getProfile().name||'Tabirly User');
-  const seed = store.get('rng-seed');
-  const w=1000,h=560; const c=document.createElement('canvas'); c.width=w; c.height=h; const ctx=c.getContext('2d');
-  // BG
-  const ggrad=ctx.createLinearGradient(0,0,w,h); ggrad.addColorStop(0,'#0b0e13'); ggrad.addColorStop(1,'#0a0d12'); ctx.fillStyle=ggrad; ctx.fillRect(0,0,w,h);
-  // Title
-  ctx.fillStyle='#06b6d4'; ctx.font='700 28px Inter, system-ui, sans-serif'; ctx.fillText('Tabirly • ESP Report', 24, 44);
-  ctx.fillStyle='#8aa0b3'; ctx.font='16px Inter, system-ui, sans-serif'; ctx.fillText(new Date().toLocaleString(), 24, 68);
-  // Name & seed
-  ctx.fillStyle='#e6eef5'; ctx.font='20px Inter, system-ui, sans-serif'; ctx.fillText(''+name, 24, 108); ctx.fillStyle='#8aa0b3'; ctx.font='14px Inter, system-ui, sans-serif'; ctx.fillText('Seed: '+seed, 24, 132);
-  // Cards
-  function card(x,y,wc,hc,title,lines){ ctx.fillStyle='rgba(255,255,255,0.04)'; ctx.strokeStyle='rgba(255,255,255,0.12)'; ctx.lineWidth=1; roundRect(ctx,x,y,wc,hc,16,true,true); ctx.fillStyle='#e6eef5'; ctx.font='700 18px Inter, system-ui, sans-serif'; ctx.fillText(title,x+16,y+28); ctx.fillStyle='#8aa0b3'; ctx.font='16px Inter, system-ui, sans-serif'; lines.forEach((ln,i)=> ctx.fillText(ln,x+16,y+60+i*22) ) }
-  function roundRect(ctx,x,y,w,h,r,fill,stroke){ if (typeof r === 'number') { r = {tl:r, tr:r, br:r, bl:r}; } ctx.beginPath(); ctx.moveTo(x+r.tl, y); ctx.lineTo(x+w-r.tr, y); ctx.quadraticCurveTo(x+w, y, x+w, y+r.tr); ctx.lineTo(x+w, y+h-r.br); ctx.quadraticCurveTo(x+w, y+h, x+w-r.br, y+h); ctx.lineTo(x+r.bl, y+h); ctx.quadraticCurveTo(x, y+h, x, y+h-r.bl); ctx.lineTo(x, y+r.tl); ctx.quadraticCurveTo(x, y, x+r.tl, y); ctx.closePath(); if(fill) ctx.fill(); if(stroke) ctx.stroke(); }
-  card(24,160,300,140,'Zener', [ `Toplam: ${zHits}/${zN}`, `Oran: ${zN? (zHits/zN*100).toFixed(1)+'%':'—'}` ]);
-  card(348,160,300,140,'Ganzfeld', [ `Toplam: ${gHits}/${gN}`, `Oran: ${gN? (gHits/gN*100).toFixed(1)+'%':'—'}` ]);
-  card(672,160,300,140,'Remote', [ `Toplam: ${rvHits}/${rv.length}`, `—` ]);
-  card(24,320,300,140,'Rüya', [ `Eşleşme: ${dMatch}/${d.length}` ]);
-  card(348,320,300,140,'Önsezi', [ `İsabet: ${pHit}/${p.length}` ]);
-  // Footer
-  ctx.fillStyle='#8aa0b3'; ctx.font='12px Inter, system-ui, sans-serif'; ctx.fillText('Eğlence amaçlıdır. © Tabirly', 24, h-20);
-  const url = c.toDataURL('image/png'); const a=document.createElement('a'); a.href=url; a.download='tabirly-esp-report.png'; a.click(); }
-
-// init
-renderNav();
-const first = store.get('first-visit', true);
-if(first){ store.set('first-visit', false); go('about'); } else { go('dashboard'); }
 // ======= Global Expose for inline onclicks =======
-// (Some browsers/pages need functions on window for inline handlers)
 Object.assign(window, {
   toggleLang, go,
   exportJSON, exportCSV, importJSON, shareImage,
@@ -439,12 +372,7 @@ window.addEventListener('error', e=>{
   d.textContent='JS Hatası: '+e.message;
   document.body.appendChild(d);
 });
-try{
-  renderNav();
-  go('dashboard');
-}catch(e){
-  console.error('Boot error', e);
-}
+try{ renderNav(); go('dashboard'); }catch(e){ console.error('Boot error', e); }
 </script>
 </body>
 </html>
