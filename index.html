@@ -108,8 +108,8 @@
 </head>
 <body>
   <header>
-    <div class="title">Tabirly • ESP Self‑Test <span class="pill">Eğlence Amaçlı</span></div>
-    <div class="subtitle" id="subtitle">Zener • Mini‑Ganzfeld • Rüya • Önsezi • <b>Remote Viewing</b>. Tüm veriler cihazında saklanır; JSON/CSV indirilebilir.</div>
+    <div class="title">Tabirly • ESP Self‑Test</div>
+    <div class="subtitle" id="subtitle">Zener • Mini‑Ganzfeld • Rüya • Önsezi • <b>Remote Viewing</b>. Tüm veriler cihazında saklanır; JSON/CSV indirilebilir.Önsezi, Duygu Dışı Algınızı test edebilirsiniz.</div>
   </header>
 
   <main class="shell">
@@ -430,19 +430,92 @@ function about(){
   </div>
 
   <div id="about-zener" class="about-tab" style="display:none">
-    <h3>🃏 Zener</h3>
-    <p>${LANG==='tr'
-      ? '5 sembolden 25 tur tahmin yaparsınız (beklenen doğru ≈5).'
-      : '25 trials with 5 symbols (expected correct ≈5).'}</p>
-    <p><b>${LANG==='tr'?'Amaç':'Goal'}:</b> ${LANG==='tr'
-      ? 'Şansa göre sapma var mı? Binom kuyruk olasılığı ile gösterilir.'
-      : 'Check deviation from chance via binomial tail probability.'}</p>
-    <ul>
-      <li>${LANG==='tr'?'İlk izlenimi seç; geri dönme yok.':'Pick the first impression; no backtracking.'}</li>
-      <li>${LANG==='tr'?'Tek oturum yerine seri yap.':'Prefer series over single sessions.'}</li>
-      <li>${LANG==='tr'?'P çok düşükse (<%1) sürpriz sayılır.':'Very low p-value (<1%) is surprising.'}</li>
-    </ul>
-  </div>
+<h3>🃏 Zener</h3>
+
+<p>
+  ${LANG==='tr'
+    ? '5 sembol (⭐ ⚫ ➕ ◼ 🌊) ile 25 tur tahmin yaparsın. Her turda içinden gelen ilk tahmini seç; geri dönme veya yaz-boz yoktur. 25 tur bittiğinde “Seansı Kaydet”e bas; tek seferlik sonuç yerine seri halinde birkaç oturum yap. Şans düzeyi p=0.2 kabul edilirse, beklenen doğru sayısı yaklaşık 5’tir.'
+    : 'You make 25 trials with 5 symbols (⭐ ⚫ ➕ ◼ 🌊). In each trial, choose the first impression; do not backtrack or revise. When 25 trials are over, press “Save Session”; prefer a series of multiple sessions rather than relying on a single one. With chance level p=0.2, the expected number of correct responses is about 5.'}
+</p>
+
+<p>
+  <b>${LANG==='tr' ? 'Amaç' : 'Goal'}:</b>
+  ${LANG==='tr'
+    ? '“Sezgisel eşleşme” gibi anlık seçim davranışında hedef dışı örüntüler (yanlılık / hafif avantaj) olup olmadığını şans modeline göre test etmek; sonuç binom dağılımının kuyruk olasılığıyla gösterilir.'
+    : 'To test, against a chance model, whether there are off-target patterns in instantaneous choice behavior (bias / slight advantage) such as “intuitive matching”; the outcome is summarized via the tail probability of the binomial distribution.'}
+</p>
+
+<p><b>${LANG==='tr' ? 'Ne Ölçer?' : 'What Does It Measure?'}</b></p>
+<ul>
+  <li>
+    ${LANG==='tr'
+      ? 'İsabet oranı = doğru / deneme.'
+      : 'Hit rate = correct / trials.'}
+  </li>
+  <li>
+    ${LANG==='tr'
+      ? 'Binom kuyruk olasılığı <code>P(X ≥ k; n, p = 0.2)</code> — belirli bir isabet sayısına yalnızca şansla ulaşma olasılığı.'
+      : 'Binomial tail probability <code>P(X ≥ k; n, p = 0.2)</code> — the probability of reaching a given hit count by chance alone.'}
+  </li>
+</ul>
+
+<p><b>${LANG==='tr' ? 'Sonuçları Nasıl Yorumlarım?' : 'How Do I Interpret the Results?'}</b></p>
+<ul>
+  <li>
+    ${LANG==='tr'
+      ? 'p-değeri yüksekse (ör. %10 ve üzeri) bu, normal dalgalanma aralığına işaret eder; şansla açıkça mümkün.'
+      : 'If the p-value is high (e.g., ≥10%), it indicates normal fluctuation; clearly compatible with chance.'}
+  </li>
+  <li>
+    ${LANG==='tr'
+      ? 'p-değeri çok düşükse (ör. &lt;%1) seri içinde istatistiksel olarak şaşırtıcı bir durum olabilir; yeni oturumlarla teyit etmeye çalış.'
+      : 'If the p-value is very low (e.g., &lt;1%), the series may be statistically surprising; try to confirm with additional sessions.'}
+  </li>
+  <li>
+    ${LANG==='tr'
+      ? 'Tek oturum üzerinden hüküm verme; 5–10 oturumdan oluşan bir seri daha değerlidir.'
+      : 'Do not draw conclusions from a single session; a series of 5–10 sessions is more informative.'}
+  </li>
+</ul>
+
+<p><b>${LANG==='tr' ? 'Sık Yapılan Hatalar' : 'Common Mistakes'}</b></p>
+<ul>
+  <li>
+    ${LANG==='tr'
+      ? 'Geri dönüp “tahmini düzeltmek” veriyi bozar.'
+      : 'Backtracking to “fix” a guess corrupts the data.'}
+  </li>
+  <li>
+    ${LANG==='tr'
+      ? '“Hissedene kadar beklemek” karar süresini uzatır; ilk izlenimle seç.'
+      : '“Waiting until it feels right” prolongs decision time; choose based on the first impression.'}
+  </li>
+  <li>
+    ${LANG==='tr'
+      ? 'Sembol frekansını ezberleyip karşı hamle yapmak (“kareler çok geldi, sırada yıldız vardır” gibi) yanlılık üretir.'
+      : 'Trying to outsmart symbol frequency (e.g., “many squares appeared, so a star must be next”) introduces bias.'}
+  </li>
+</ul>
+
+<p><b>${LANG==='tr' ? 'İpuçları' : 'Tips'}</b></p>
+<ul>
+  <li>
+    ${LANG==='tr'
+      ? 'Oturumdan önce kısa ve sabit bir rutin uygula (30–60 sn nefes sayma, dikkat toplama).'
+      : 'Use a brief, consistent pre-session routine (30–60 seconds of breath counting and focusing attention).'}
+  </li>
+  <li>
+    ${LANG==='tr'
+      ? 'Tohum (seed) sabitse, farklı günlerdeki sonuçları karşılaştırmak daha kolay olur.'
+      : 'If the seed is fixed, comparing results across different days becomes easier.'}
+  </li>
+  <li>
+    ${LANG==='tr'
+      ? 'Aynı gün art arda çok oturum yapma; yorgunluk etkisi artar.'
+      : 'Avoid running too many sessions back-to-back on the same day; fatigue effects increase.'}
+  </li>
+</ul>
+
 
   <div id="about-ganz" class="about-tab" style="display:none">
     <h3>🔮 Mini-Ganzfeld</h3>
