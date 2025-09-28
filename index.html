@@ -144,7 +144,7 @@ const I18N = {
     randomize: 'Rastgeleleştir', set_seed: 'Tohum Belirle', theme: 'Tema', brand_primary: 'Birincil Renk', brand_secondary: 'İkincil Renk',
     save: 'Kaydet',
     onboarding: 'Mini Rehber',
-    step1: 'Zener ile 5×25 tur yap. Seri daha anlamlıdır.',
+    step1: 'Zener ile 5×25 tur yap. Seri yapmak daha anlamlı sonuçlar verir.',
     step2: 'Ganzfeld’de izlenimleri önce yaz, sonra seçim yap.',
     step3: 'Rüyayı uyanınca 30 sn içinde not et; akşam eşleşmeyi işaretle.',
     step4: 'Önsezi notlarını tek cümleyle yaz; oldu/olmadı de.',
@@ -375,45 +375,103 @@ function renderRVHistory(){ const arr = store.get('rv-sessions', []); if(arr.len
 function about(){
   return `
   <div class="section-title">Hakkında / Rehber</div>
-  <p><b>Tabirly • ESP Self-Test</b> tamamen eğlence ve merak içindir. Sonuçlar
-  bilimsel teşhis, tedavi, finansal veya güvenlik kararlarının <b>yerine geçmez</b>.
-  Tüm veriler tarayıcında saklanır (localStorage); JSON/CSV ile dışa/ice aktarabilirsin.</p>
+  <div class="tabs">
+    <button onclick="aboutTab('intro')">Intro & Gizlilik</button>
+    <button onclick="aboutTab('zener')">Zener Kart Testi</button>
+    <button onclick="aboutTab('ganz')">Mini-Ganzfeld</button>
+    <button onclick="aboutTab('ruya')">Rüya Testi</button>
+    <button onclick="aboutTab('rv')">Remote Viewing</button>
+    <button onclick="aboutTab('onsezi')">Önsezi Günlüğü</button>
+    <button onclick="aboutTab('seed')">RNG Seed</button>
+  </div>
 
-  <div class="section-title" style="margin-top:14px">Nasıl Kullanılır?</div>
-  <ul class="list">
-    <li><b>Zener Kart Testi:</b> 5 sembolden (⭐ ⚫ ➕ ◼ 🌊) 25 tur. Tahmin yap → “Seansı Kaydet”.
-      Dashboard’da yüzdeler ve binom kuyruk olasılığı görülebilir.</li>
-    <li><b>Mini-Ganzfeld:</b> Sistem 4 hedef üretir (ör. “Kırmızı kapı”, “Gitar”…). 
-      <i>İzlenimlerini önce yaz</i>, sonra seçimini yap. Sonuç ve geçmiş tablosu oluşur.</li>
-    <li><b>Remote Viewing:</b> 4 görsel hedeften biri gizli seçilir. Betimlemeyi yaz,
-      sonra en çok benzeyeni seç. “Kaydet” ile geçmişe eklenir.</li>
-    <li><b>Rüya Testi:</b> Geceye bir hedef/tema koy, sabah kısa not al. Akşam
-      “Eşleşti/Eşleşmedi” işaretle. Özet tabloda oran görünür.</li>
-    <li><b>Önsezi Günlüğü:</b> Kısa bir cümle ile not al (“Bugün X arayacak” gibi),
-      sonra “Oldu/Olmadı” işaretle. İsabet oranı otomatik hesaplanır.</li>
-  </ul>
+  <div id="about-intro" class="about-tab">
+    <p><b>Tabirly • ESP Self-Test</b> tamamen <b>eğlence ve merak</b> içindir.
+    Sonuçlar bilimsel/medikal/finansal kararların yerine <b>geçmez</b>.</p>
+    <p><b>Veri Gizliliği:</b> Tüm veriler tarayıcınızda (localStorage) saklanır.
+    Hiçbir şey sunucuya gönderilmez. JSON/CSV ile kendi cihazınıza dışa aktarabilirsiniz.
+    “Tüm Veriyi Sil” ile her şeyi tek tıkla temizleyebilirsiniz.</p>
+    <p><b>Uyarı:</b> Bu testler “paranormal yetenek ölçümü” değildir. 
+    Amaç sezgilerinizi, hafıza yanlılıklarınızı ve oyunvari deneyleri keşfetmektir.</p>
+  </div>
 
-  <div class="section-title" style="margin-top:14px">RNG Seed & Şeffaflık</div>
-  <p>Rastgelelik tek bir <b>seed</b> ile üretilir (Mulberry32). Ayarlar’dan seed’i
-  sabitleyebilir veya rastgeleleştirebilirsin. Seed değişmezse “aynı deste/dağılım”
-  tekrar üretilebilir—şeffaflık için iyi bir pratik.</p>
+  <div id="about-zener" class="about-tab" style="display:none">
+    <h3>🃏 Zener Kart Testi</h3>
+    <p>5 sembolden (⭐ ⚫ ➕ ◼ 🌊) 25 tur tahmin yaparsınız. Beklenen doğru ≈5’tir.</p>
+    <p><b>Amacı:</b> Şansa göre sapma var mı görmek. Binom kuyruk olasılığıyla hesaplanır.</p>
+    <ul>
+      <li><b>İpuçları:</b> İlk izlenimi seç, geri dönme yok.</li>
+      <li>Seri yap → tek oturumla hüküm verme.</li>
+      <li>Sonuçta <b>P çok düşük</b> çıkarsa (ör. <%1) = “sürpriz” olabilir.</li>
+    </ul>
+  </div>
 
-  <div class="section-title" style="margin-top:14px">Veri & Gizlilik</div>
-  <ul class="list">
-    <li><b>Saklama:</b> localStorage (cihazında), sunucuya gönderim yok.</li>
-    <li><b>Dışa Aktar/İçe Aktar:</b> JSON ile tam yedek; CSV ile tablo dostu çıktı.</li>
-    <li><b>Silme:</b> Sol menüde “Tüm Veriyi Sil”.</li>
-  </ul>
+  <div id="about-ganz" class="about-tab" style="display:none">
+    <h3>🔮 Mini-Ganzfeld</h3>
+    <p>4 hedef kavramdan biri gizli seçilir. Önce <b>serbest çağrışım notları</b> yaz, sonra seçim yap.</p>
+    <p><b>Amacı:</b> Dış uyaranı azaltıp zihinsel imgelerle hedefi eşleştirme iddiasını eğlenceli testle denemek.</p>
+    <ul>
+      <li>Önce not → sonra seçim (bias azaltma).</li>
+      <li>Doğru oranı şansa göre %25’tir.</li>
+      <li>20–30 oturumluk serilerle daha anlamlı sonuç çıkar.</li>
+    </ul>
+  </div>
 
-  <div class="section-title" style="margin-top:14px">İpuçları</div>
-  <ul class="list">
-    <li>Kısa tek denemeler yerine <b>seri seanslar</b> yap; dalgalanma azalır.</li>
-    <li>Ganzfeld/Remote’da <b>önce betimle</b>, sonra seç. Seçimden önce bakışını daraltma.</li>
-    <li>Rüyayı <b>uyanır uyanmaz</b> 30 saniye içinde not et; akşam eşleşmeyi değerlendir.</li>
-  </ul>
+  <div id="about-ruya" class="about-tab" style="display:none">
+    <h3>🌙 Rüya Testi</h3>
+    <p><b>Nasıl Kullanılır:</b> Yatmadan önce tema belirle. Sabah uyanır uyanmaz (≤30 sn) rüyanı not et. 
+    Akşam o günkü hedefle karşılaştır: <b>Eşleşti / Eşleşmedi</b>.</p>
+    <p><b>Amacı:</b> Hafıza yanlılığını önleyerek 
+    “önceden seçilen hedef ↔ rüya içeriği” uyumunu görmek.</p>
+    <ul>
+      <li>Bir gecede 1 hedef seç.</li>
+      <li>Anahtar kelimeler yaz, cümle kurmak şart değil.</li>
+      <li>Kararsızsan boş bırak → veriyi temiz tut.</li>
+    </ul>
+  </div>
 
-  <p class="muted">© Tabirly — ESP mini testleri. Eğlence amaçlıdır.</p>`;
+  <div id="about-rv" class="about-tab" style="display:none">
+    <h3>👁 Remote Viewing</h3>
+    <p>4 görsel/tema havuzu. Önce zihinsel betimleme, sonra hedef seçimi.</p>
+    <p><b>Amacı:</b> Uzak/gizli hedefle zihinsel imgeler arasında benzerlik olup olmadığını test etmek.</p>
+    <ul>
+      <li>Not → seçim sırası önemli.</li>
+      <li>Doğru şansa göre %25’tir.</li>
+      <li>Ana motiflere odaklan, zorlama benzetmeden kaçın.</li>
+    </ul>
+  </div>
+
+  <div id="about-onsezi" class="about-tab" style="display:none">
+    <h3>⚡ Önsezi Günlüğü</h3>
+    <p>Gün içindeki ani hisleri kısa not al. Gerçekleşince <b>Oldu</b>, olmadıysa <b>Olmadı</b> işaretle.</p>
+    <p><b>Amacı:</b> Sezgileri sistematik kayda almak, hafıza yanlılığını dengelemek.</p>
+    <ul>
+      <li>Tarih+bağlam ekle (sabah/öğle/akşam).</li>
+      <li>Çok genel notlar (“bir şey olacak”) ölçülemez.</li>
+      <li>Doğru + yanlışlar eşit derecede değerli.</li>
+    </ul>
+  </div>
+
+  <div id="about-seed" class="about-tab" style="display:none">
+    <h3>🎲 RNG Seed</h3>
+    <p><b>Nedir:</b> Rastgele sayı üreticisinin başlangıç noktası. Aynı seed → aynı dağılım.</p>
+    <p><b>Amacı:</b> Şeffaflık ve tekrar edilebilirlik. Aynı seed ile arkadaşınla aynı koşulları paylaşabilirsin.</p>
+    <ul>
+      <li>Seed’in büyüklüğü zorluk değiştirmez, sadece <b>dizilimi</b> değiştirir.</li>
+      <li>Seed sabitle → aynı koşulları tekrar gör.</li>
+      <li>Seed rastgeleleştir → her defasında farklı senaryo yaşa.</li>
+    </ul>
+  </div>
+
+  <script>
+  function aboutTab(id){
+    document.querySelectorAll('.about-tab').forEach(el=>el.style.display='none');
+    document.getElementById('about-'+id).style.display='block';
+  }
+  </script>
+  `;
 }
+
 
 // ========== Settings ==========
 function settings(){ const seed = store.get('rng-seed'); const theme = store.get('theme'); const prof = getProfile(); return `<div class="section-title">${t('settings')}</div><div class="card" style="margin-top:8px"><div class="section-title">${t('rng_seed')}</div><p class="muted">${t('rng_note')}</p><div class="settings-grid"><div><label>${t('rng_seed')}</label><input id="seedInput" type="number" value="${seed}" /></div><div class="flex-center" style="margin-top:22px"><button class="btn secondary" onclick="document.getElementById('seedInput').value = (Date.now() & 0xffffffff)>>>0">${t('randomize')}</button><button class="btn" onclick="setSeed(document.getElementById('seedInput').value); alert('Seed güncellendi'); go('settings')">${t('set_seed')}</button></div></div></div><div class="card" style="margin-top:12px"><div class="section-title">${t('theme')}</div><div class="settings-grid"><div><label>${t('brand_primary')}</label><input id="c1" type="color" value="${(theme&&theme.c1)||'#7c3aed'}" /></div><div><label>${t('brand_secondary')}</label><input id="c2" type="color" value="${(theme&&theme.c2)||'#06b6d4'}" /></div></div><div class="row" style="margin-top:10px"><button class="btn" onclick="applyTheme()">${t('save')}</button></div></div><div class="card" style="margin-top:12px"><div class="section-title">${t('profile')}</div><div class="settings-grid"><div><label>${t('name')}</label><input id="pname" type="text" value="${prof.name}" /></div></div><div class="row" style="margin-top:10px"><button class="btn" onclick="(function(){ const p=getProfile(); p.name = document.getElementById('pname').value; setProfile(p); alert('Profil kaydedildi'); go('settings') })()">${t('save')}</button></div></div>` }
