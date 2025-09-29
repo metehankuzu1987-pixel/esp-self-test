@@ -266,6 +266,28 @@ div[style*="overflow:auto"]{ -webkit-overflow-scrolling:touch }
     z-index: auto;
   }
 }
+    /* ==== BULLET-PROOF MOBILE PATCH (put at the very end) ==== */
+@media (max-width: 980px){
+  .shell{
+    display: grid !important;
+    grid-template-columns: 1fr !important;  /* tek sütun */
+    gap: 16px !important;
+  }
+  .nav{
+    position: static !important;   /* sticky kapalı */
+    top: auto !important;
+    width: auto !important;
+    z-index: 0 !important;
+    margin-bottom: 12px !important; /* altta nefes */
+  }
+  /* İçerik her durumda nav'ın üstünde kalsın */
+  #view, .panel{
+    position: relative !important;
+    z-index: 1 !important;
+  }
+  /* Eski iki sütun kuralını kesin iptal */
+  .shell[style]{ grid-template-columns: 1fr !important; }
+}
   </style>
 </head>
 <body>
