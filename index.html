@@ -321,6 +321,38 @@ div[style*="overflow:auto"]{ -webkit-overflow-scrolling:touch }
   /* 4) Her ihtimale karşı: inline grid yazan stil varsa iptal */
   .shell[style]{ display: block !important; grid-template-columns: none !important; }
 }
+    /* ==== FINAL FIX: Force block layout on mobile ==== */
+@media (max-width: 980px){
+  .shell{
+    display: block !important;             /* grid iptal */
+    grid-template-columns: none !important;
+    grid-auto-flow: initial !important;
+    gap: 0 !important;
+  }
+
+  .nav{
+    position: relative !important;         /* sticky kapalı */
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    margin: 0 0 12px 0 !important;
+    z-index: 0 !important;
+  }
+
+  #view, .panel{
+    position: relative !important;
+    width: 100% !important;
+    z-index: 1 !important;
+    clear: both !important;                /* olası float kalıntılarını sıfırla */
+  }
+
+  /* inline style grid override olursa iptal */
+  .shell[style]{
+    display: block !important;
+    grid-template-columns: none !important;
+  }
+}
   </style>
 </head>
 <body>
